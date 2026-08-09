@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 50" fill="none">
+  <!-- Eye/Lens Icon -->
+  <circle cx="25" cy="25" r="18" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+  <circle cx="25" cy="25" r="8" fill="#3b82f6"/>
+  <circle cx="25" cy="25" r="3" fill="#1e3a5f"/>
+  <!-- Scan lines -->
+  <line x1="25" y1="3" x2="25" y2="10" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="25" y1="40" x2="25" y2="47" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="3" y1="25" x2="10" y2="25" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="40" y1="25" x2="47" y2="25" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- UVIP Text -->
+  <text x="55" y="30" font-family="Inter, sans-serif" font-size="22" font-weight="800" fill="#ffffff" letter-spacing="1">UVIP</text>
+</svg>
