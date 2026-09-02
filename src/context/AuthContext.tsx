@@ -2,46 +2,80 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
   type ReactNode,
 } from "react";
 import { message } from "antd";
+import { authService, type User } from "../api/auth.service";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { name: string; email: string; role: string } | null;
-  login: (email: string, password: string) => boolean;
-  logout: () => void;
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const DUMMY_USER = {
-  email: "admin@uvip.id",
-  password: "admin123",
-  name: "Herry Santosa",
-  role: "Super Admin",
-};
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<AuthContextType["user"]>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (email: string, password: string): boolean => {
-    if (email === DUMMY_USER.email && password === DUMMY_USER.password) {
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem("access_token");
+    const savedUser = localStorage.getItem("user");
+
+    if (token && savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+        setIsAuthenticated(true);
+      } catch (e) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("access_token");
+      }
+    }
+    setLoading(false);
+  }, []);
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await authService.login({
+        username: email,
+        password: password,
+      });
+
+      localStorage.setItem("access_token", response.access_token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      setUser(response.user);
       setIsAuthenticated(true);
-      setUser({ name: DUMMY_USER.name, email: DUMMY_USER.email, role: DUMMY_USER.role });
       message.success("Login berhasil! Selamat datang.");
       return true;
+    } catch (error: any) {
+      console.error("Login error:", error);
+      message.error(
+        error.response?.data?.detail || "Email atau password salah."
+      );
+      return false;
     }
-    message.error("Email atau password salah.");
-    return false;
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    message.info("Anda telah logout.");
+  const logout = async () => {
+    try {
+      await authService.logout();
+      setIsAuthenticated(false);
+      setUser(null);
+      message.info("Anda telah logout.");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
