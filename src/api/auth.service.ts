@@ -1,7 +1,7 @@
 import apiClient from './client';
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -30,7 +30,7 @@ export interface LoginResponse {
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
     const formData = new URLSearchParams();
-    formData.append('username', data.username);
+    formData.append('email', data.email);
     formData.append('password', data.password);
 
     const response = await apiClient.post('/auth/login', formData, {

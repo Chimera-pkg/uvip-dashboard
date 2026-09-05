@@ -39,27 +39,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const response = await authService.login({
-        username: email,
-        password: password,
-      });
-
-      localStorage.setItem("access_token", response.access_token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-
-      setUser(response.user);
-      setIsAuthenticated(true);
-      message.success("Login berhasil! Selamat datang.");
-      return true;
-    } catch (error: any) {
-      console.error("Login error:", error);
-      message.error(
-        error.response?.data?.detail || "Email atau password salah."
-      );
-      return false;
-    }
+  const login = async (_email: string, _password: string): Promise<boolean> => {
+    // Dummy bypass for UI preview (remove before production)
+    const mockUser: User = {
+      id: "1",
+      email: _email || "admin@uvip.id",
+      full_name: "Herry Santosa",
+      role: "Super Admin",
+      is_active: true,
+      created_at: new Date().toISOString(),
+    };
+    localStorage.setItem("access_token", "dummy-token-for-preview");
+    localStorage.setItem("user", JSON.stringify(mockUser));
+    setUser(mockUser);
+    setIsAuthenticated(true);
+    return true;
   };
 
   const logout = async () => {
