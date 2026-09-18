@@ -9,6 +9,29 @@ interface SidebarProps {
   collapsed: boolean;
 }
 
+/**
+ * Menu key -> route path (single source of truth for navigation).
+ * Matches the keys used in src/data/sidebarMenu.ts.
+ */
+const menuKeyToPath: Record<string, string> = {
+  dashboard: "/dashboard",
+  "spatial-analysis": "/spatial-analysis",
+  "predictive-simulation": "/predictive-simulation",
+  "data-upload": "/data-management/upload",
+  "data-list": "/data-management/list",
+  "model-training": "/ai-model-center/training",
+  "model-results": "/ai-model-center/results",
+  "surveys-missions": "/surveys-missions",
+  reports: "/reports",
+  "users-roles": "/users-roles",
+  settings: "/settings",
+  "system-monitoring": "/system-monitoring",
+};
+
+const pathToMenuKey: Record<string, string> = Object.fromEntries(
+  Object.entries(menuKeyToPath).map(([key, path]) => [path, key]),
+);
+
 export default function Sidebar({ collapsed }: SidebarProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -39,7 +62,13 @@ export default function Sidebar({ collapsed }: SidebarProps) {
         <Menu
           mode="inline"
           selectedKeys={[activeKey]}
-          defaultOpenKeys={collapsed ? [] : ["data-management", "ai-model-center"]}
+          defaultOpenKeys={
+            collapsed ? [] : ["data-management", "ai-model-center"]
+          }
+          onClick={({ key }) => {
+            const target = menuKeyToPath[key];
+            if (target) navigate(target);
+          }}
           items={sidebarMenuItems}
           onClick={({ key }) => navigate(`/${key}`)}
           className="sidebar-menu border-r-0"

@@ -8,8 +8,8 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const onFinish = (values: { email: string; password: string }) => {
-    const success = login(values.email, values.password);
+  const onFinish = async (values: { email: string; password: string }) => {
+    const success = await login(values.email, values.password);
     if (success) {
       navigate("/dashboard", { replace: true });
     }

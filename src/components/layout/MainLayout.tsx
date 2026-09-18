@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import Sidebar from "./Sidebar";
 import AppHeader from "./AppHeader";
@@ -6,11 +7,7 @@ import AppFooter from "./AppFooter";
 
 const { Sider, Header, Content, Footer } = Layout;
 
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -42,7 +39,9 @@ export default function MainLayout({
           <AppHeader collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
         </Header>
 
-        <Content className="p-5 bg-[#f0f2f5]">{children}</Content>
+        <Content className="p-5 bg-[#f0f2f5]">
+          <Outlet />
+        </Content>
 
         <Footer className="bg-white border-t border-gray-200 p-0">
           <AppFooter />
