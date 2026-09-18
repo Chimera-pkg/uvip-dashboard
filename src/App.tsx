@@ -52,6 +52,7 @@ export default function App() {
         }
       >
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
           path="/predictive-simulation"
@@ -65,16 +66,7 @@ export default function App() {
           />
         ))}
       </Route>
-      <Route
-        path="/projects"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <ProjectsPage />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+
       <Route
         path="*"
         element={

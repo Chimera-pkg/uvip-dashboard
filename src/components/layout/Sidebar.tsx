@@ -15,6 +15,7 @@ interface SidebarProps {
  */
 const menuKeyToPath: Record<string, string> = {
   dashboard: "/dashboard",
+  projects: "/projects",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",
@@ -27,10 +28,6 @@ const menuKeyToPath: Record<string, string> = {
   settings: "/settings",
   "system-monitoring": "/system-monitoring",
 };
-
-const pathToMenuKey: Record<string, string> = Object.fromEntries(
-  Object.entries(menuKeyToPath).map(([key, path]) => [path, key]),
-);
 
 export default function Sidebar({ collapsed }: SidebarProps) {
   const { user, logout } = useAuth();
@@ -70,7 +67,6 @@ export default function Sidebar({ collapsed }: SidebarProps) {
             if (target) navigate(target);
           }}
           items={sidebarMenuItems}
-          onClick={({ key }) => navigate(`/${key}`)}
           className="sidebar-menu border-r-0"
           style={{ background: "transparent" }}
           inlineCollapsed={collapsed}
