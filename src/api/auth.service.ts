@@ -1,7 +1,7 @@
-import apiClient from './client';
+import apiClient from "./client";
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -14,10 +14,11 @@ export interface RegisterRequest {
 
 export interface User {
   id: string;
+  name: string;
   email: string;
-  full_name: string;
   role: string;
   is_active: boolean;
+  last_login_at?: string;
   created_at: string;
 }
 
@@ -29,28 +30,22 @@ export interface LoginResponse {
 
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    const formData = new URLSearchParams();
-    formData.append('username', data.username);
-    formData.append('password', data.password);
-
-    const response = await apiClient.post('/auth/login', formData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
+    const response = await apiClient.post("/auth/login", data);
     return response.data;
   },
 
   async register(data: RegisterRequest): Promise<User> {
-    const response = await apiClient.post('/auth/register', data);
+    const response = await apiClient.post("/auth/register", data);
     return response.data;
   },
 
   async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get('/auth/me');
+    const response = await apiClient.get("/auth/me");
     return response.data;
   },
 
   async logout(): Promise<void> {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
   },
 };

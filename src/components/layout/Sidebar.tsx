@@ -1,5 +1,6 @@
 import { Menu, Avatar } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
 import uvipLogo from "../../assets/uvip-logo.svg";
@@ -10,6 +11,11 @@ interface SidebarProps {
 
 export default function Sidebar({ collapsed }: SidebarProps) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get active key from pathname (e.g. "/projects" -> "projects")
+  const activeKey = location.pathname.split("/")[1] || "dashboard";
 
   return (
     <div className="flex flex-col h-full">
@@ -32,9 +38,10 @@ export default function Sidebar({ collapsed }: SidebarProps) {
       <div className="flex-1 overflow-y-auto py-3">
         <Menu
           mode="inline"
-          defaultSelectedKeys={["dashboard"]}
+          selectedKeys={[activeKey]}
           defaultOpenKeys={collapsed ? [] : ["data-management", "ai-model-center"]}
           items={sidebarMenuItems}
+          onClick={({ key }) => navigate(`/${key}`)}
           className="sidebar-menu border-r-0"
           style={{ background: "transparent" }}
           inlineCollapsed={collapsed}
@@ -52,14 +59,14 @@ export default function Sidebar({ collapsed }: SidebarProps) {
                 fontWeight: 600,
               }}
             >
-              {user?.name?.charAt(0) || "H"}
+              {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </Avatar>
             <div className="flex-1 min-w-0">
-              <div className="text-white text-sm font-semibold truncate">
-                {user?.name || "Herry Santosa"}
+              <div className="text-white text-sm font-semibold truncate capitalize">
+                {user?.name || "User"}
               </div>
-              <div className="text-blue-300/70 text-xs">
-                {user?.role || "Super Admin"}
+              <div className="text-blue-300/70 text-xs capitalize">
+                {user?.role || "Admin"}
               </div>
             </div>
             <button

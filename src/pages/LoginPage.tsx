@@ -1,9 +1,5 @@
 import { Form, Input, Button, Checkbox } from "antd";
-import {
-  MailOutlined,
-  LockOutlined,
-  EyeOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, LockOutlined, EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import uvipLogo from "../assets/uvip-logo.svg";
@@ -90,9 +86,7 @@ export default function LoginPage() {
           >
             <Form.Item
               label={
-                <span className="text-gray-600 text-sm font-medium">
-                  Email
-                </span>
+                <span className="text-gray-600 text-sm font-medium">Email</span>
               }
               name="email"
               rules={[
@@ -133,9 +127,7 @@ export default function LoginPage() {
             </Form.Item>
 
             <div className="flex items-center justify-between mb-5">
-              <Checkbox className="text-gray-500 text-sm">
-                Ingat saya
-              </Checkbox>
+              <Checkbox className="text-gray-500 text-sm">Ingat saya</Checkbox>
               <a className="text-blue-500 text-sm hover:text-blue-600 cursor-pointer">
                 Lupa password?
               </a>

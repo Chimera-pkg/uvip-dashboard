@@ -42,21 +42,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await authService.login({
-        username: email,
+        email: email,
         password: password,
       });
 
       localStorage.setItem("access_token", response.access_token);
-      localStorage.setItem("user", JSON.stringify(response.user));
 
-      setUser(response.user);
+      const user = await authService.getCurrentUser();
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setUser(user);
       setIsAuthenticated(true);
       message.success("Login berhasil! Selamat datang.");
       return true;
     } catch (error: any) {
       console.error("Login error:", error);
       message.error(
-        error.response?.data?.detail || "Email atau password salah."
+        error.response?.data?.detail || "Email atau password salah.",
       );
       return false;
     }

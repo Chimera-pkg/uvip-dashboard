@@ -1,5 +1,6 @@
 import {
   DashboardOutlined,
+  ProjectOutlined,
   HeatMapOutlined,
   ExperimentOutlined,
   DatabaseOutlined,
@@ -20,6 +21,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "dashboard",
     icon: createElement(DashboardOutlined),
     label: "Dashboard",
+  },
+  {
+    key: "projects",
+    icon: createElement(ProjectOutlined),
+    label: "Projects",
   },
   {
     key: "spatial-analysis",

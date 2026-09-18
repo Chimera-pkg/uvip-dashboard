@@ -3,6 +3,7 @@ import { useAuth } from "./context/AuthContext";
 import MainLayout from "./components/layout/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
+import ProjectsPage from "./pages/ProjectsPage";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,16 @@ export default function App() {
           <ProtectedRoute>
             <MainLayout>
               <DashboardPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <ProjectsPage />
             </MainLayout>
           </ProtectedRoute>
         }

@@ -1,13 +1,13 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { type AxiosInstance, AxiosError } from "axios";
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 30000,
 });
@@ -15,7 +15,7 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor - attach token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +23,7 @@ apiClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor - handle errors
@@ -32,11 +32,11 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem('access_token');
-      window.location.href = '/login';
+      localStorage.removeItem("access_token");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;
