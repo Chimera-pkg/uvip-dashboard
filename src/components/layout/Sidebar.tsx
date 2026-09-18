@@ -16,6 +16,7 @@ interface SidebarProps {
 const menuKeyToPath: Record<string, string> = {
   dashboard: "/dashboard",
   projects: "/projects",
+  "street-photos": "/street-photos",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",
