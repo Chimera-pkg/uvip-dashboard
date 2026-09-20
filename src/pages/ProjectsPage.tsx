@@ -5,14 +5,16 @@ import { useProjects } from "../hooks/useProjects";
 import type { Project, ProjectRequest } from "../api/projects.service";
 
 export default function ProjectsPage() {
-  const { projects, loading, fetchProjects, createProject, updateProject, deleteProject } = useProjects();
+  const { paginatedData, loading, fetchProjects, createProject, updateProject, deleteProject } = useProjects();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [form] = Form.useForm<ProjectRequest>();
 
   useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+    fetchProjects(currentPage, pageSize);
+  }, [fetchProjects, currentPage, pageSize]);
 
   const handleAdd = () => {
     setEditingProject(null);
@@ -48,6 +50,7 @@ export default function ProjectsPage() {
       setIsModalVisible(false);
       form.resetFields();
       setEditingProject(null);
+      fetchProjects(currentPage, pageSize);
     }
   };
 
@@ -93,7 +96,10 @@ export default function ProjectsPage() {
           <Popconfirm
             title="Delete the project"
             description="Are you sure to delete this project?"
-            onConfirm={() => deleteProject(record.id)}
+            onConfirm={async () => {
+              const success = await deleteProject(record.id);
+              if (success) fetchProjects(currentPage, pageSize);
+            }}
             okText="Yes"
             cancelText="No"
           >
@@ -122,10 +128,18 @@ export default function ProjectsPage() {
       <Card className="rounded-xl shadow-sm overflow-hidden" styles={{ body: { padding: 0 } }}>
         <Table
           columns={columns}
-          dataSource={projects}
+          dataSource={paginatedData?.data || []}
           rowKey="id"
           loading={loading}
-          pagination={{ pageSize: 10 }}
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: paginatedData?.total_data || 0,
+            onChange: (page, size) => {
+              setCurrentPage(page);
+              setPageSize(size);
+            },
+          }}
         />
       </Card>
 

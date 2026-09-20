@@ -4,19 +4,22 @@ import {
   projectsService,
   type Project,
   type ProjectRequest,
+  type PaginatedProjects,
 } from "../api/projects.service";
 
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [paginatedData, setPaginatedData] = useState<PaginatedProjects | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (page = 1, size = 10) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await projectsService.getProjects();
-      setProjects(data);
+      const data = await projectsService.getProjects(page, size);
+      setPaginatedData(data);
+      setProjects(data.data);
     } catch (err: any) {
       const msg = err.response?.data?.detail || "Failed to fetch projects";
       setError(msg);
@@ -30,7 +33,6 @@ export function useProjects() {
     try {
       await projectsService.createProject(data);
       message.success("Project created successfully");
-      await fetchProjects();
       return true;
     } catch (err: any) {
       const msg = err.response?.data?.detail || "Failed to create project";
@@ -46,7 +48,6 @@ export function useProjects() {
     try {
       await projectsService.updateProject(id, data);
       message.success("Project updated successfully");
-      await fetchProjects();
       return true;
     } catch (err: any) {
       const msg = err.response?.data?.detail || "Failed to update project";
@@ -59,7 +60,6 @@ export function useProjects() {
     try {
       await projectsService.deleteProject(id);
       message.success("Project deleted successfully");
-      await fetchProjects();
       return true;
     } catch (err: any) {
       const msg = err.response?.data?.detail || "Failed to delete project";
@@ -70,6 +70,7 @@ export function useProjects() {
 
   return {
     projects,
+    paginatedData,
     loading,
     error,
     fetchProjects,

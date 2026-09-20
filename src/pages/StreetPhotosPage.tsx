@@ -51,7 +51,7 @@ export default function StreetPhotosPage() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchProjects();
+    fetchProjects(1, 100);
   }, [fetchProjects]);
 
   useEffect(() => {

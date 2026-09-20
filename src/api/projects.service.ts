@@ -22,9 +22,18 @@ export interface ProjectRequest {
   description: string;
 }
 
+export interface PaginatedProjects {
+  total_data: number;
+  total_pages: number;
+  current_page: number;
+  data: Project[];
+}
+
 export const projectsService = {
-  async getProjects(): Promise<Project[]> {
-    const response = await apiClient.get("/projects/");
+  async getProjects(page = 1, size = 10): Promise<PaginatedProjects> {
+    const response = await apiClient.get("/projects/", {
+      params: { page, size },
+    });
     return response.data;
   },
 
