@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Button, Space, Card, Select, Image, Table, Tag } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
-import { useStreetPhotos } from "../hooks/useStreetPhotos";
+import { Card, Select, Table, Tag, Modal, Space, Button } from "antd";
+import { PlaySquareOutlined, EyeOutlined } from "@ant-design/icons";
+import { VideoSegmentationResultView } from "../components/VideoSegmentationResultView";
+import { useStreetVideos } from "../hooks/useStreetVideos";
 import { useProjects } from "../hooks/useProjects";
-import type { StreetPhoto } from "../api/street-photos.service";
+import type { StreetVideo } from "../api/street-videos.service";
 import dayjs from "dayjs";
-import { SegmentationResultView } from "../components/SegmentationResultView";
 
-export default function StreetPhotosPage() {
-  const { data, loading, fetchStreetPhotos } = useStreetPhotos();
+export default function StreetVideosPage() {
+  const { data, loading, fetchStreetVideos } = useStreetVideos();
   const { projects, fetchProjects, loading: loadingProjects } = useProjects();
 
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
@@ -16,8 +16,9 @@ export default function StreetPhotosPage() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  const [selectedPhotoForResults, setSelectedPhotoForResults] = useState<
+  const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [selectedVideoForResults, setSelectedVideoForResults] = useState<
     string | null
   >(null);
 
@@ -27,42 +28,46 @@ export default function StreetPhotosPage() {
 
   useEffect(() => {
     if (selectedProjectId) {
-      fetchStreetPhotos(selectedProjectId, currentPage, pageSize);
+      fetchStreetVideos(selectedProjectId, currentPage, pageSize);
     }
-  }, [selectedProjectId, currentPage, pageSize, fetchStreetPhotos]);
+  }, [selectedProjectId, currentPage, pageSize, fetchStreetVideos]);
 
   const columns = [
     {
       title: "File",
       dataIndex: "original_filename",
       key: "original_filename",
-      render: (text: string, record: StreetPhoto) => {
+      render: (text: string, record: StreetVideo) => {
         const API_BASE_URL =
           import.meta.env.VITE_API_URL || "http://localhost:8000";
-        // Assuming file_path doesn't have a leading slash
         const fileUrl = record.file_path.startsWith("http")
           ? record.file_path
           : `${API_BASE_URL}/${record.file_path}`;
 
         return (
           <div className="flex items-center gap-3">
-            <Image
-              src={fileUrl}
-              alt={text}
-              width={64}
-              height={48}
-              className="object-cover rounded-md border border-gray-200 cursor-pointer"
-              fallback="https://via.placeholder.com/64x48?text=Error"
-            />
+            <div
+              className="w-16 h-12 bg-gray-100 rounded-md border border-gray-200 flex items-center justify-center text-gray-400 cursor-pointer"
+              onClick={() => {
+                setPreviewVideoUrl(fileUrl);
+                setIsPreviewVisible(true);
+              }}
+            >
+              <PlaySquareOutlined className="text-2xl" />
+            </div>
             <div className="flex flex-col">
               <span
-                className="font-semibold text-gray-800 text-sm max-w-37.5 truncate"
+                className="font-semibold text-blue-600 text-sm max-w-37.5 truncate hover:underline cursor-pointer"
                 title={text}
+                onClick={() => {
+                  setPreviewVideoUrl(fileUrl);
+                  setIsPreviewVisible(true);
+                }}
               >
                 {text}
               </span>
               <span className="text-xs text-gray-400">
-                {record.file_size_kb} KB
+                {(record.file_size_kb / 1024).toFixed(2)} MB
               </span>
             </div>
           </div>
@@ -72,7 +77,7 @@ export default function StreetPhotosPage() {
     {
       title: "Location",
       key: "location",
-      render: (_: any, record: StreetPhoto) => (
+      render: (_: any, record: StreetVideo) => (
         <div className="flex flex-col">
           <span className="text-sm">{record.street_name || "Unknown"}</span>
           <span className="text-xs text-gray-400">
@@ -105,18 +110,20 @@ export default function StreetPhotosPage() {
       dataIndex: "captured_at",
       key: "captured_at",
       render: (val: string) => (
-        <span className="text-sm">{dayjs(val).format("YYYY-MM-DD HH:mm")}</span>
+        <span className="text-sm">
+          {val ? dayjs(val).format("YYYY-MM-DD HH:mm") : "-"}
+        </span>
       ),
     },
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: StreetPhoto) => (
+      render: (_: any, record: StreetVideo) => (
         <Space size="middle">
           <Button
             type="primary"
             icon={<EyeOutlined />}
-            onClick={() => setSelectedPhotoForResults(record.id)}
+            onClick={() => setSelectedVideoForResults(record.id)}
             size="small"
             style={{ borderRadius: "6px" }}
           >
@@ -127,11 +134,11 @@ export default function StreetPhotosPage() {
     },
   ];
 
-  if (selectedPhotoForResults) {
+  if (selectedVideoForResults) {
     return (
-      <SegmentationResultView
-        photoId={selectedPhotoForResults}
-        onBack={() => setSelectedPhotoForResults(null)}
+      <VideoSegmentationResultView
+        videoId={selectedVideoForResults}
+        onBack={() => setSelectedVideoForResults(null)}
       />
     );
   }
@@ -140,7 +147,7 @@ export default function StreetPhotosPage() {
     <div>
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-lg font-bold text-gray-800">
-          Street Photos Management
+          Street Videos Management
         </h1>
         <div className="flex gap-3">
           <Select
@@ -182,10 +189,31 @@ export default function StreetPhotosPage() {
         <div className="flex flex-col items-center justify-center h-64 bg-white/60 rounded-xl border-2 border-dashed border-gray-300">
           <div className="text-4xl mb-3">📁</div>
           <p className="text-gray-500 font-medium">
-            Please select a project to view its street photos
+            Please select a project to view its street videos
           </p>
         </div>
       )}
+
+      <Modal
+        title="Video Preview"
+        open={isPreviewVisible}
+        onCancel={() => {
+          setIsPreviewVisible(false);
+          setPreviewVideoUrl(null);
+        }}
+        footer={null}
+        width={800}
+        destroyOnClose
+      >
+        {previewVideoUrl && (
+          <video
+            src={previewVideoUrl}
+            controls
+            autoPlay
+            className="w-full h-1/2 bg-black rounded-lg"
+          />
+        )}
+      </Modal>
     </div>
   );
 }

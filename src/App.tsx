@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import StreetPhotosPage from "./pages/StreetPhotosPage";
+import StreetVideosPage from "./pages/StreetVideosPage";
 import SpatialAnalysisPage from "./pages/SpatialAnalysisPage";
 import PredictiveSimulationPage from "./pages/PredictiveSimulationPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
@@ -55,6 +56,7 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/street-photos" element={<StreetPhotosPage />} />
+        <Route path="/street-videos" element={<StreetVideosPage />} />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
           path="/predictive-simulation"

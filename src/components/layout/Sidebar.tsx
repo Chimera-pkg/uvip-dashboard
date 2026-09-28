@@ -17,6 +17,7 @@ const menuKeyToPath: Record<string, string> = {
   dashboard: "/dashboard",
   projects: "/projects",
   "street-photos": "/street-photos",
+  "street-videos": "/street-videos",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",

@@ -2,6 +2,7 @@ import {
   DashboardOutlined,
   ProjectOutlined,
   CameraOutlined,
+  VideoCameraOutlined,
   // HeatMapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
@@ -32,6 +33,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "street-photos",
     icon: createElement(CameraOutlined),
     label: "Street Photos",
+  },
+  {
+    key: "street-videos",
+    icon: createElement(VideoCameraOutlined),
+    label: "Street Videos",
   },
   // {
   //   key: "spatial-analysis",

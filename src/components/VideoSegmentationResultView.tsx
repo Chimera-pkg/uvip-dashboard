@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
-import { Button, Skeleton, Result, Image } from "antd";
+import { Button, Skeleton, Result } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { useSegmentationResult } from "../hooks/useSegmentationResult";
+import { useVideoSegmentationResult } from "../hooks/useVideoSegmentationResult";
 
 interface Props {
-  photoId: string;
+  videoId: string;
   onBack: () => void;
 }
 
-export const SegmentationResultView: React.FC<Props> = ({
-  photoId,
+export const VideoSegmentationResultView: React.FC<Props> = ({
+  videoId,
   onBack,
 }) => {
-  const { data, loading, error, fetchSegmentationResult } =
-    useSegmentationResult();
+  const { data, loading, error, fetchVideoSegmentationResult } =
+    useVideoSegmentationResult();
 
   useEffect(() => {
-    fetchSegmentationResult(photoId);
-  }, [photoId, fetchSegmentationResult]);
+    fetchVideoSegmentationResult(videoId);
+  }, [videoId, fetchVideoSegmentationResult]);
 
   if (loading) {
     return (
@@ -36,9 +36,12 @@ export const SegmentationResultView: React.FC<Props> = ({
         subTitle={error}
         extra={[
           <Button type="primary" onClick={onBack} key="back">
-            Back to Photos
+            Back to Videos
           </Button>,
-          <Button onClick={() => fetchSegmentationResult(photoId)} key="retry">
+          <Button
+            onClick={() => fetchVideoSegmentationResult(videoId)}
+            key="retry"
+          >
             Retry
           </Button>,
         ]}
@@ -48,7 +51,7 @@ export const SegmentationResultView: React.FC<Props> = ({
 
   if (!data) return null;
 
-  const imageUrl = data.segmentation_overlay_url;
+  const videoUrl = data.video_url || data.segmentation?.segmentation_overlay_url || data.segmentation?.segmentation_url;
 
   // Prepare scores
   const p = data.prediction;
@@ -85,30 +88,31 @@ export const SegmentationResultView: React.FC<Props> = ({
     },
   ];
 
+  const seg = data.segmentation || {};
   const positiveFactors = [
     {
       label: "Cakupan Vegetasi",
       value:
-        data.green_coverage_pct != null
-          ? `+ ${(data.green_coverage_pct / 100).toFixed(2)}`
+        seg.green_coverage_pct != null
+          ? `+ ${(seg.green_coverage_pct / 100).toFixed(2)}`
           : "-",
       score:
-        data.green_coverage_pct != null ? data.green_coverage_pct / 100 : 0,
+        seg.green_coverage_pct != null ? seg.green_coverage_pct / 100 : 0,
     },
     {
       label: "Lebar Trotoar",
       value:
-        data.sidewalk_pct != null ? `+ ${data.sidewalk_pct.toFixed(2)}` : "-",
-      score: data.sidewalk_pct != null ? data.sidewalk_pct : 0,
+        seg.sidewalk_pct != null ? `+ ${seg.sidewalk_pct.toFixed(2)}` : "-",
+      score: seg.sidewalk_pct != null ? seg.sidewalk_pct : 0,
     },
     {
       label: "Keterbukaan Langit",
       value:
-        data.sky_visibility_pct != null
-          ? `+ ${(data.sky_visibility_pct / 100).toFixed(2)}`
+        seg.sky_visibility_pct != null
+          ? `+ ${(seg.sky_visibility_pct / 100).toFixed(2)}`
           : "-",
       score:
-        data.sky_visibility_pct != null ? data.sky_visibility_pct / 100 : 0,
+        seg.sky_visibility_pct != null ? seg.sky_visibility_pct / 100 : 0,
     },
   ];
 
@@ -116,35 +120,35 @@ export const SegmentationResultView: React.FC<Props> = ({
     {
       label: "Kepadatan Reklame",
       value:
-        data.signage_pct != null
-          ? `- ${(data.signage_pct / 100).toFixed(2)}`
-          : data.visual_clutter_index != null
-            ? `- ${data.visual_clutter_index.toFixed(2)}`
+        seg.signage_pct != null
+          ? `- ${(seg.signage_pct / 100).toFixed(2)}`
+          : seg.visual_clutter_index != null
+            ? `- ${seg.visual_clutter_index.toFixed(2)}`
             : "-",
       score:
-        data.signage_pct != null
-          ? data.signage_pct / 100
-          : data.visual_clutter_index != null
-            ? data.visual_clutter_index
+        seg.signage_pct != null
+          ? seg.signage_pct / 100
+          : seg.visual_clutter_index != null
+            ? seg.visual_clutter_index
             : 0,
     },
     {
       label: "Kepadatan Kendaraan",
       value:
-        data.vehicle_pct != null
-          ? `- ${(data.vehicle_pct / 100).toFixed(2)}`
+        seg.vehicle_pct != null
+          ? `- ${(seg.vehicle_pct / 100).toFixed(2)}`
           : "-",
-      score: data.vehicle_pct != null ? data.vehicle_pct / 100 : 0,
+      score: seg.vehicle_pct != null ? seg.vehicle_pct / 100 : 0,
     },
     {
       label: "Bangunan Tinggi",
       value:
-        data.building_coverage_pct != null
-          ? `- ${(data.building_coverage_pct / 100).toFixed(2)}`
+        seg.building_coverage_pct != null
+          ? `- ${(seg.building_coverage_pct / 100).toFixed(2)}`
           : "-",
       score:
-        data.building_coverage_pct != null
-          ? data.building_coverage_pct / 100
+        seg.building_coverage_pct != null
+          ? seg.building_coverage_pct / 100
           : 0,
     },
   ];
@@ -164,20 +168,23 @@ export const SegmentationResultView: React.FC<Props> = ({
       </div>
 
       <div className="relative rounded-2xl overflow-hidden mb-6 border border-gray-100 bg-gray-50 flex items-center justify-center">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt="Segmentation Result"
-            className="w-full h-auto object-contain max-h-100"
+        {videoUrl ? (
+          <video
+            src={videoUrl}
+            controls
+            autoPlay
+            loop
+            muted
+            className="w-full h-auto max-h-100 bg-black"
           />
         ) : (
           <div className="h-64 flex items-center justify-center text-gray-400">
-            Image not available
+            Video not available
           </div>
         )}
 
-        {/* Fake Legend as overlay */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full flex gap-3 text-[10px] shadow-sm font-medium">
+        {/* Fake Legend as overlay (optional, but keep it for consistency) */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full flex gap-3 text-[10px] shadow-sm font-medium z-10 pointer-events-none">
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-[#8fb339]"></span>
             Vegetation
