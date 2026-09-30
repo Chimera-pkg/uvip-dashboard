@@ -3,8 +3,6 @@ import { Card, Row, Col } from "antd";
 import { EnvironmentOutlined, DashboardOutlined } from "@ant-design/icons";
 import KpiCard from "../components/charts/KpiCard";
 import MapView from "../components/charts/MapView";
-import DonutChart from "../components/charts/DonutChart";
-import HorizontalBarChart from "../components/charts/HorizontalBarChart";
 import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
 import apiClient from "../api/client";
 import { useProjects } from "../hooks/useProjects";
@@ -83,52 +81,6 @@ function RecentProjectsCard() {
           ))
         )}
       </div>
-    </Card>
-  );
-}
-
-/* ============================================================
-   Dataset Summary Card
-   ============================================================ */
-function DatasetSummaryCard() {
-  return (
-    <Card
-      className="dashboard-card rounded-xl shadow-sm"
-      title={
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-gray-800 text-sm">
-            Dataset Summary
-          </span>
-          <a className="text-blue-500 text-xs font-medium cursor-pointer">
-            View All
-          </a>
-        </div>
-      }
-    >
-      <DonutChart />
-    </Card>
-  );
-}
-
-/* ============================================================
-   Model Performance Card
-   ============================================================ */
-function ModelPerformanceCard() {
-  return (
-    <Card
-      className="dashboard-card rounded-xl shadow-sm"
-      title={
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-gray-800 text-sm">
-            Model Performance (R²)
-          </span>
-          <a className="text-blue-500 text-xs font-medium cursor-pointer">
-            Detail
-          </a>
-        </div>
-      }
-    >
-      <HorizontalBarChart />
     </Card>
   );
 }
