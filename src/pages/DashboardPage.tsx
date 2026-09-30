@@ -1,19 +1,30 @@
+import { useEffect, useState } from "react";
 import { Card, Row, Col } from "antd";
 import { EnvironmentOutlined, DashboardOutlined } from "@ant-design/icons";
 import KpiCard from "../components/charts/KpiCard";
 import MapView from "../components/charts/MapView";
 import DonutChart from "../components/charts/DonutChart";
 import HorizontalBarChart from "../components/charts/HorizontalBarChart";
-import { kpiData } from "../data/kpiData";
+import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
 import { surveyPoints } from "../data/surveyPoints";
+import apiClient from "../api/client";
+import { useProjects } from "../hooks/useProjects";
+import { useNavigate } from "react-router-dom";
 
 /* ============================================================
-   Recent Survey Points Card
+   Recent Projects Card
    ============================================================ */
-function RecentSurveyPointsCard() {
-  const getUviBadgeClass = (level: string) => {
-    if (level === "high") return "uvi-badge-high";
-    if (level === "medium") return "uvi-badge-medium";
+function RecentProjectsCard() {
+  const navigate = useNavigate();
+  const { projects, fetchProjects, loading } = useProjects();
+
+  useEffect(() => {
+    fetchProjects(1, 10);
+  }, [fetchProjects]);
+
+  const getUviBadgeClass = (score: number) => {
+    if (score >= 7) return "uvi-badge-high";
+    if (score >= 4) return "uvi-badge-medium";
     return "uvi-badge-low";
   };
 
@@ -23,49 +34,55 @@ function RecentSurveyPointsCard() {
       title={
         <div className="flex items-center justify-between">
           <span className="font-semibold text-gray-800 text-sm">
-            Recent Survey Points
+            Recent Projects
           </span>
-          <a className="text-blue-500 text-xs font-medium cursor-pointer">
+          <a
+            className="text-blue-500 text-xs font-medium cursor-pointer"
+            onClick={() => navigate("/projects")}
+          >
             View All
           </a>
         </div>
       }
     >
       <div className="flex flex-col gap-3 max-h-[350px] overflow-y-auto pr-1">
-        {surveyPoints.map((sp) => (
-          <div
-            key={sp.key}
-            className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
-          >
-            {/* Thumbnail */}
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-100 to-blue-100 flex-shrink-0 flex items-center justify-center">
-              <EnvironmentOutlined className="text-blue-500 text-lg" />
-            </div>
-
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-800 truncate">
-                  {sp.name}
-                </span>
-                <span className={getUviBadgeClass(sp.uviLevel)}>
-                  UVI {sp.uvi.toFixed(2)}
-                </span>
-              </div>
-              <div className="text-xs text-gray-400 mt-0.5">{sp.area}</div>
-            </div>
-
-            {/* Right info */}
-            <div className="text-right flex-shrink-0">
-              <div className="text-[11px] text-gray-400">
-                {sp.date}, {sp.time}
-              </div>
-              <div className="text-[10px] text-gray-300 mt-0.5">
-                {sp.lat}, {sp.lng}
-              </div>
-            </div>
+        {loading ? (
+          <div className="text-center py-4 text-gray-500 text-sm">
+            Loading...
           </div>
-        ))}
+        ) : (
+          projects.map((p) => (
+            <div
+              key={p.id}
+              className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
+            >
+              {/* Thumbnail */}
+              <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-100 to-blue-100 flex-shrink-0 flex items-center justify-center">
+                <EnvironmentOutlined className="text-blue-500 text-lg" />
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-800 truncate">
+                    {p.name}
+                  </span>
+                  <span className={getUviBadgeClass(p.uvi_score)}>
+                    UVI {p.uvi_score?.toFixed(2)}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-400 mt-0.5">{p.location}</div>
+              </div>
+
+              {/* Right info */}
+              <div className="text-right flex-shrink-0">
+                <div className="text-[11px] text-gray-400">
+                  {new Date(p.created_at).toLocaleDateString()}
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </Card>
   );
@@ -121,6 +138,54 @@ function ModelPerformanceCard() {
    Dashboard Page (Main Export)
    ============================================================ */
 export default function DashboardPage() {
+  const [kpis, setKpis] = useState<KpiItem[]>(initialKpiData);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await apiClient.get("/projects/home-dashboard");
+        if (response.data?.status === "success") {
+          const { total_projects, average_scores } = response.data;
+
+          setKpis((prevKpis) =>
+            prevKpis.map((kpi) => {
+              switch (kpi.key) {
+                case "total-projects":
+                  return { ...kpi, value: total_projects.toString() };
+                case "avg-safety":
+                  return {
+                    ...kpi,
+                    value: average_scores.safety_score.toFixed(2),
+                  };
+                case "avg-beauty":
+                  return {
+                    ...kpi,
+                    value: average_scores.beauty_score.toFixed(2),
+                  };
+                case "avg-comfort":
+                  return {
+                    ...kpi,
+                    value: average_scores.comfort_score.toFixed(2),
+                  };
+                case "avg-uvi":
+                  return {
+                    ...kpi,
+                    value: average_scores.uvi_score.toFixed(2),
+                  };
+                default:
+                  return kpi;
+              }
+            }),
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <div>
       {/* Title */}
@@ -131,7 +196,7 @@ export default function DashboardPage() {
 
       {/* KPI Cards */}
       <Row gutter={[14, 14]} className="mb-5">
-        {kpiData.map((kpi) => (
+        {kpis.map((kpi) => (
           <Col key={kpi.key} xs={24} sm={12} lg={4}>
             <KpiCard kpi={kpi} />
           </Col>
@@ -157,18 +222,18 @@ export default function DashboardPage() {
           </Card>
         </Col>
 
-        {/* Recent Survey Points */}
-        <Col xs={24} lg={8}>
-          <RecentSurveyPointsCard />
+        {/* Recent Projects Card */}
+        <Col xs={24} lg={14}>
+          <RecentProjectsCard />
         </Col>
 
         {/* Right column: Dataset + Model */}
-        <Col xs={24} lg={7}>
+        {/* <Col xs={24} lg={7}>
           <div className="flex flex-col gap-3.5">
             <DatasetSummaryCard />
             <ModelPerformanceCard />
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

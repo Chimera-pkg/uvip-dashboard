@@ -11,12 +11,11 @@ import type { KpiItem } from "../../data/kpiData";
 import SparklineChart from "./SparklineChart";
 
 const ICONS: Record<string, React.ReactNode> = {
-  "total-survey": <AimOutlined />,
-  "avg-uvi": <EnvironmentOutlined />,
-  "avg-beauty": <AppstoreOutlined />,
+  "total-projects": <AimOutlined />,
   "avg-safety": <SafetyCertificateOutlined />,
+  "avg-beauty": <AppstoreOutlined />,
   "avg-comfort": <HeartOutlined />,
-  gvi: <SmileOutlined />,
+  "avg-uvi": <EnvironmentOutlined />,
 };
 
 export default function KpiCard({ kpi }: { kpi: KpiItem }) {

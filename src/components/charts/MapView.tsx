@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, CircleMarker, Marker, Tooltip } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Marker,
+  Tooltip,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Select, Divider } from "antd";
@@ -32,7 +38,15 @@ function uviColor(uvi: number): string {
   return "#ef4444";
 }
 
-function PoiLabel({ name, lat, lng }: { name: string; lat: number; lng: number }) {
+function PoiLabel({
+  name,
+  lat,
+  lng,
+}: {
+  name: string;
+  lat: number;
+  lng: number;
+}) {
   // divIcon html is static; render text via a dedicated small divIcon per label
   const icon = L.divIcon({
     className: "uvip-poi-label",
@@ -105,7 +119,9 @@ export default function MapView({
                 <div style={{ fontSize: 12 }}>
                   <b>{p.name}</b>
                   <br />
-                  {layer === "gvi" ? "GVI covered zone" : `${p.surveyCount} survey points`}
+                  {layer === "gvi"
+                    ? "GVI covered zone"
+                    : `${p.surveyCount} survey points`}
                   <br />
                   UVI {p.uvi.toFixed(2)}
                 </div>
@@ -120,7 +136,7 @@ export default function MapView({
       </MapContainer>
 
       {/* Active layer control (top-right) */}
-      <div className="absolute top-3 right-3 z-[1000] bg-white rounded-lg shadow-md p-2.5 w-64">
+      {/* <div className="absolute top-3 right-3 z-[1000] bg-white rounded-lg shadow-md p-2.5 w-64">
         <Divider titlePlacement="left" style={{ margin: "0 0 6px" }}>
           <span className="text-xs font-semibold text-gray-500">Active Layer</span>
         </Divider>
@@ -132,10 +148,10 @@ export default function MapView({
           options={mapLayers.map((l) => ({ value: l.key, label: l.label }))}
           className="!p-0"
         />
-      </div>
+      </div> */}
 
       {/* Stat chips (top-left) */}
-      {showStats && (
+      {/* {showStats && (
         <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-2">
           {mapStats.map((s) => (
             <div
@@ -148,16 +164,18 @@ export default function MapView({
               <div className="text-base font-bold text-gray-800 leading-tight">
                 {s.value}
                 {s.unit && (
-                  <span className="text-xs font-medium text-gray-400 ml-0.5">{s.unit}</span>
+                  <span className="text-xs font-medium text-gray-400 ml-0.5">
+                    {s.unit}
+                  </span>
                 )}
               </div>
             </div>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* UVI legend (bottom-left) */}
-      {layer === "uvi" && (
+      {/* {layer === "uvi" && (
         <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 rounded-lg shadow-md px-4 py-3">
           <div className="text-[11px] font-semibold text-gray-700 mb-2">
             Urban Visual Index (UVI)
@@ -181,8 +199,7 @@ export default function MapView({
             ))}
           </div>
         </div>
-      )}
-
+      )} */}
     </div>
   );
 }
