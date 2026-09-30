@@ -1,22 +1,7 @@
-import { useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  CircleMarker,
-  Marker,
-  Tooltip,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Select, Divider } from "antd";
-import {
-  mapCenters,
-  markerPoints,
-  mapPoiLabels,
-  mapLayers,
-  uviHeatLegend,
-  mapStats,
-} from "../../data/mapData";
+import { mapCenters, mapPoiLabels, mapLayers } from "../../data/mapData";
 
 export type MapLayerKey = (typeof mapLayers)[number]["key"];
 
@@ -27,15 +12,6 @@ interface MapViewProps {
   /** when set, only this layer's visualization is shown */
   initialLayer?: MapLayerKey;
   showStats?: boolean;
-}
-
-/** Heat color for a UVI score on a green→amber→red scale */
-function uviColor(uvi: number): string {
-  if (uvi >= 8) return "#16a34a";
-  if (uvi >= 7) return "#84cc16";
-  if (uvi >= 6) return "#f59e0b";
-  if (uvi >= 5) return "#f97316";
-  return "#ef4444";
 }
 
 function PoiLabel({
@@ -59,15 +35,8 @@ function PoiLabel({
 export default function MapView({
   centerName = "Kota Malang",
   height = 420,
-  initialLayer = "uvi",
-  showStats = true,
 }: MapViewProps) {
-  const [layer, setLayer] = useState<MapLayerKey>(initialLayer);
   const center = mapCenters.find((c) => c.name === centerName) ?? mapCenters[0];
-
-  const handleLayer = (key: MapLayerKey) => {
-    setLayer(key);
-  };
 
   return (
     <div
@@ -86,49 +55,6 @@ export default function MapView({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* UVI heatmap circles */}
-        {layer === "uvi" &&
-          markerPoints.map((p) => (
-            <CircleMarker
-              key={`heat-${p.id}`}
-              center={[p.lat, p.lng]}
-              radius={22 + p.uvi * 2}
-              pathOptions={{
-                color: "transparent",
-                fillColor: uviColor(p.uvi),
-                fillOpacity: 0.35,
-              }}
-            />
-          ))}
-
-        {/* Survey points */}
-        {layer !== "uvi" &&
-          markerPoints.map((p) => (
-            <CircleMarker
-              key={`pt-${p.id}`}
-              center={[p.lat, p.lng]}
-              radius={8}
-              pathOptions={{
-                color: "#ffffff",
-                weight: 2,
-                fillColor: layer === "gvi" ? "#16a34a" : "#3b82f6",
-                fillOpacity: 1,
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -8]}>
-                <div style={{ fontSize: 12 }}>
-                  <b>{p.name}</b>
-                  <br />
-                  {layer === "gvi"
-                    ? "GVI covered zone"
-                    : `${p.surveyCount} survey points`}
-                  <br />
-                  UVI {p.uvi.toFixed(2)}
-                </div>
-              </Tooltip>
-            </CircleMarker>
-          ))}
-
         {/* POI name labels */}
         {mapPoiLabels.map((poi) => (
           <PoiLabel key={poi.name} {...poi} />
@@ -138,7 +64,9 @@ export default function MapView({
       {/* Active layer control (top-right) */}
       {/* <div className="absolute top-3 right-3 z-[1000] bg-white rounded-lg shadow-md p-2.5 w-64">
         <Divider titlePlacement="left" style={{ margin: "0 0 6px" }}>
-          <span className="text-xs font-semibold text-gray-500">Active Layer</span>
+          <span className="text-xs font-semibold text-gray-500">
+            Active Layer
+          </span>
         </Divider>
         <Select
           size="small"

@@ -6,7 +6,6 @@ import MapView from "../components/charts/MapView";
 import DonutChart from "../components/charts/DonutChart";
 import HorizontalBarChart from "../components/charts/HorizontalBarChart";
 import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
-import { surveyPoints } from "../data/surveyPoints";
 import apiClient from "../api/client";
 import { useProjects } from "../hooks/useProjects";
 import { useNavigate } from "react-router-dom";

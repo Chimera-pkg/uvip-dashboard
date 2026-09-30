@@ -2,7 +2,6 @@ import { Card } from "antd";
 import {
   AimOutlined,
   EnvironmentOutlined,
-  SmileOutlined,
   SafetyCertificateOutlined,
   HeartOutlined,
   AppstoreOutlined,
