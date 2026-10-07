@@ -33,7 +33,7 @@ export default function AppHeader({ collapsed, onToggle }: AppHeaderProps) {
           <Select
             defaultValue="kota-malang"
             variant="borderless"
-            className="min-w-[130px]"
+            className="min-w-32.5"
             options={[
               { value: "kota-malang", label: "Kota Malang" },
               { value: "kota-batu", label: "Kota Batu" },
@@ -61,8 +61,8 @@ export default function AppHeader({ collapsed, onToggle }: AppHeaderProps) {
         <Badge count={5} size="small">
           <Button
             type="text"
-            icon={<BellOutlined className="text-lg" />}
-            className="text-gray-600"
+            icon={<BellOutlined className="text-lg text-white" />}
+            className="text-white"
           />
         </Badge>
 

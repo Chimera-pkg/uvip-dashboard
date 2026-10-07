@@ -107,4 +107,12 @@ export const streetPhotosService = {
   async deleteStreetPhoto(id: string): Promise<void> {
     await apiClient.delete(`/street-photos/${id}`);
   },
+
+  async exportPhotosExcel(projectId: string): Promise<Blob> {
+    const response = await apiClient.get("/street-photos/export/export-photos-excel", {
+      params: { project_id: projectId },
+      responseType: "blob",
+    });
+    return response.data;
+  },
 };
