@@ -100,7 +100,7 @@ export default function StreetPhotosPage() {
             {data?.data.map((record) => {
               const fileUrl = record.file_path.startsWith("http")
                 ? record.file_path
-                : `${API_BASE_URL}${record.file_path}`;
+                : `${API_BASE_URL.replace(/\/$/, '')}/${record.file_path.replace(/^\//, '')}`;
 
               return (
                 <Card
