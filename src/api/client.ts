@@ -9,7 +9,6 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 30000,
 });
 
 // Request interceptor - attach token
