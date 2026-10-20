@@ -42,13 +42,11 @@ export default function PredictiveSimulationPage() {
       </div>
 
       {/* KPI Cards */}
-      <Row gutter={[14, 14]} className="mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 mb-5">
         {kpiData.map((kpi) => (
-          <Col key={kpi.key} xs={24} sm={12} lg={4}>
-            <KpiCard kpi={kpi} />
-          </Col>
+          <KpiCard key={kpi.key} kpi={kpi} />
         ))}
-      </Row>
+      </div>
 
       <Row gutter={[14, 14]}>
         {/* Left: Selected Location + Map */}

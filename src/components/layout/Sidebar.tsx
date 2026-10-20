@@ -3,10 +3,12 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
-import uvipLogo from "../../assets/uvip-logo.svg";
+import uvipLogo from "../../assets/urbanlens_logo.png";
+import uvipLogoSmall from "../../assets/urbanlens_logo_small.png";
 
 interface SidebarProps {
   collapsed: boolean;
+  onItemClick?: () => void;
 }
 
 /**
@@ -31,7 +33,7 @@ const menuKeyToPath: Record<string, string> = {
   "system-monitoring": "/system-monitoring",
 };
 
-export default function Sidebar({ collapsed }: SidebarProps) {
+export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,18 +44,18 @@ export default function Sidebar({ collapsed }: SidebarProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Logo Section */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
-        <img src={uvipLogo} alt="UVIP Logo" className="h-10 w-auto" />
-        {!collapsed && (
-          <div className="flex flex-col">
-            <span className="text-[10px] text-blue-300/70 tracking-widest font-medium leading-tight">
-              Urban Visual Intelligence
-            </span>
-            <span className="text-[10px] text-blue-300/70 tracking-widest font-medium leading-tight">
-              Platform
-            </span>
-          </div>
-        )}
+      <div
+        className="flex items-center gap-3 px-5 py-5 border-b border-white/10 cursor-pointer"
+        onClick={() => {
+          navigate("/dashboard");
+          onItemClick?.();
+        }}
+      >
+        <img
+          src={collapsed ? uvipLogoSmall : uvipLogo}
+          alt="UVIP Logo"
+          className={collapsed ? "h-14 w-auto" : "h-24 w-auto"}
+        />
       </div>
 
       {/* Menu */}
@@ -66,7 +68,10 @@ export default function Sidebar({ collapsed }: SidebarProps) {
           }
           onClick={({ key }) => {
             const target = menuKeyToPath[key];
-            if (target) navigate(target);
+            if (target) {
+              navigate(target);
+              onItemClick?.();
+            }
           }}
           items={sidebarMenuItems}
           className="sidebar-menu border-r-0"
@@ -97,7 +102,10 @@ export default function Sidebar({ collapsed }: SidebarProps) {
               </div>
             </div>
             <button
-              onClick={logout}
+              onClick={() => {
+                logout();
+                onItemClick?.();
+              }}
               className="text-slate-400 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none"
               title="Logout"
             >

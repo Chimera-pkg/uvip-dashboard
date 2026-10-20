@@ -131,6 +131,7 @@ export default function ProjectsPage() {
           dataSource={paginatedData?.data || []}
           rowKey="id"
           loading={loading}
+          scroll={{ x: 750 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,
