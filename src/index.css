@@ -142,4 +142,29 @@
     font-size: 12px;
     font-weight: 600;
   }
+
+  /* Leaflet custom popup & marker */
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .leaflet-popup-content {
+    margin: 0 !important;
+    line-height: 1.4 !important;
+  }
+
+  .uvip-photo-marker {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  @keyframes uvip-marker-ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
 }

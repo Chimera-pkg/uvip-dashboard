@@ -5,6 +5,10 @@ import KpiCard from "../components/charts/KpiCard";
 import MapView from "../components/charts/MapView";
 import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
 import apiClient from "../api/client";
+import {
+  streetPhotosService,
+  type StreetPhotoLocation,
+} from "../api/street-photos.service";
 import { useProjects } from "../hooks/useProjects";
 import { useNavigate } from "react-router-dom";
 
@@ -90,6 +94,19 @@ function RecentProjectsCard() {
    ============================================================ */
 export default function DashboardPage() {
   const [kpis, setKpis] = useState<KpiItem[]>(initialKpiData);
+  const [photoLocations, setPhotoLocations] = useState<StreetPhotoLocation[]>(
+    [],
+  );
+  const [loadingLocations, setLoadingLocations] = useState<boolean>(true);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null,
+  );
+
+  const { projects, fetchProjects, loading: loadingProjects } = useProjects();
+
+  useEffect(() => {
+    fetchProjects(1, 100);
+  }, [fetchProjects]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -137,6 +154,23 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        setLoadingLocations(true);
+        const locations =
+          await streetPhotosService.getLocations(selectedProjectId);
+        setPhotoLocations(locations);
+      } catch (error) {
+        console.error("Failed to fetch street photo locations:", error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+
+    fetchLocations();
+  }, [selectedProjectId]);
+
   return (
     <div>
       {/* Title */}
@@ -164,12 +198,20 @@ export default function DashboardPage() {
             title={
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-gray-800 text-sm">
-                  UVI Heatmap
+                  PVI Heatmap
                 </span>
               </div>
             }
           >
-            <MapView height={310} />
+            <MapView
+              height={310}
+              locations={photoLocations}
+              loading={loadingLocations}
+              projects={projects}
+              selectedProjectId={selectedProjectId}
+              onProjectChange={(projectId) => setSelectedProjectId(projectId)}
+              loadingProjects={loadingProjects}
+            />
           </Card>
         </Col>
 

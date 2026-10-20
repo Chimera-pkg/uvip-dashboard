@@ -24,6 +24,16 @@ export interface StreetPhoto {
   created_at: string;
 }
 
+export interface StreetPhotoLocation {
+  id: string;
+  original_filename: string;
+  lattitude?: string | number;
+  latitude?: string | number;
+  longtitude?: string | number;
+  longitude?: string | number;
+  [key: string]: any;
+}
+
 export interface PaginatedStreetPhotos {
   total_data: number;
   total_pages: number;
@@ -114,5 +124,22 @@ export const streetPhotosService = {
       responseType: "blob",
     });
     return response.data;
+  },
+
+  async getLocations(projectId?: string | null): Promise<StreetPhotoLocation[]> {
+    const params: Record<string, string> = {};
+    if (projectId) {
+      params.project_id = projectId;
+    }
+    const response = await apiClient.get("/street-photos/locations", {
+      params: Object.keys(params).length > 0 ? params : undefined,
+    });
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    if (response.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    }
+    return [];
   },
 };
