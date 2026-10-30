@@ -31,6 +31,8 @@ export interface StreetPhotoLocation {
   latitude?: string | number;
   longtitude?: string | number;
   longitude?: string | number;
+  uvi_score?: string | number | null;
+  raw_score?: string | number | null;
   [key: string]: any;
 }
 
