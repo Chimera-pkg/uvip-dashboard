@@ -1,11 +1,27 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, Popconfirm, Card } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Popconfirm,
+  Card,
+} from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useProjects } from "../hooks/useProjects";
 import type { Project, ProjectRequest } from "../api/projects.service";
 
 export default function ProjectsPage() {
-  const { paginatedData, loading, fetchProjects, createProject, updateProject, deleteProject } = useProjects();
+  const {
+    paginatedData,
+    loading,
+    fetchProjects,
+    createProject,
+    updateProject,
+    deleteProject,
+  } = useProjects();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -59,7 +75,9 @@ export default function ProjectsPage() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <span className="font-semibold text-gray-800">{text}</span>,
+      render: (text: string) => (
+        <span className="font-semibold text-gray-800">{text}</span>
+      ),
     },
     {
       title: "Location",
@@ -82,17 +100,24 @@ export default function ProjectsPage() {
       ),
     },
     {
-      title: "UVI Score",
+      title: "PVI Score",
       dataIndex: "uvi_score",
       key: "uvi_score",
-      render: (val: number) => <span className="font-bold text-blue-500">{val}</span>,
+      render: (val: number) => (
+        <span className="font-bold text-blue-500">{val}</span>
+      ),
     },
     {
       title: "Action",
       key: "action",
       render: (_: any, record: Project) => (
         <Space size="middle">
-          <Button type="text" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(record)} />
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            className="text-blue-500"
+            onClick={() => handleEdit(record)}
+          />
           <Popconfirm
             title="Delete the project"
             description="Are you sure to delete this project?"
@@ -119,13 +144,19 @@ export default function ProjectsPage() {
           icon={<PlusOutlined />}
           onClick={handleAdd}
           className="rounded-lg shadow-lg shadow-blue-500/30"
-          style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", border: "none" }}
+          style={{
+            background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+            border: "none",
+          }}
         >
           Add Project
         </Button>
       </div>
 
-      <Card className="rounded-xl shadow-sm overflow-hidden" styles={{ body: { padding: 0 } }}>
+      <Card
+        className="rounded-xl shadow-sm overflow-hidden"
+        styles={{ body: { padding: 0 } }}
+      >
         <Table
           columns={columns}
           dataSource={paginatedData?.data || []}
@@ -157,21 +188,22 @@ export default function ProjectsPage() {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: "Please input the project name!" }]}
+            rules={[
+              { required: true, message: "Please input the project name!" },
+            ]}
           >
             <Input placeholder="Enter project name" />
           </Form.Item>
           <Form.Item
             name="location"
             label="Location"
-            rules={[{ required: true, message: "Please input the project location!" }]}
+            rules={[
+              { required: true, message: "Please input the project location!" },
+            ]}
           >
             <Input placeholder="Enter location (e.g. SBY)" />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-          >
+          <Form.Item name="description" label="Description">
             <Input.TextArea placeholder="Enter description" rows={3} />
           </Form.Item>
         </Form>

@@ -3,10 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Spin, Select, Popover } from "antd";
-import {
-  EnvironmentOutlined,
-  FolderOutlined,
-} from "@ant-design/icons";
+import { EnvironmentOutlined, FolderOutlined } from "@ant-design/icons";
 import { mapCenters, mapPoiLabels, mapLayers } from "../../data/mapData";
 import type { StreetPhotoLocation } from "../../api/street-photos.service";
 
@@ -133,7 +130,7 @@ function hexToRgba(hex: string, alpha: number = 0.3): string {
 export function calculateOffset(
   index: number,
   total: number,
-  spacing: number = 22
+  spacing: number = 22,
 ): { dx: number; dy: number } {
   if (total <= 1) return { dx: 0, dy: 0 };
 
@@ -150,8 +147,7 @@ export function calculateOffset(
   const row = Math.floor(index / cols);
   const col = index % cols;
 
-  const itemsInThisRow =
-    row === rows - 1 ? total - row * cols : cols;
+  const itemsInThisRow = row === rows - 1 ? total - row * cols : cols;
 
   const dx = (col - (itemsInThisRow - 1) / 2) * spacing;
   const dy = (row - (rows - 1) / 2) * spacing;
@@ -164,7 +160,7 @@ const markerIconCache = new Map<string, L.DivIcon>();
 export function getPhotoMarkerIcon(
   color: string,
   dx: number = 0,
-  dy: number = 0
+  dy: number = 0,
 ): L.DivIcon {
   const cacheKey = `${color}_${dx}_${dy}`;
   const cached = markerIconCache.get(cacheKey);
@@ -374,11 +370,7 @@ function PhotoPopupContent({ loc }: { loc: PositionedLocationItem }) {
   );
 }
 
-function StreetPhotoMarkers({
-  groups,
-}: {
-  groups: LocationGroup[];
-}) {
+function StreetPhotoMarkers({ groups }: { groups: LocationGroup[] }) {
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState<number>(() => map.getZoom());
 
@@ -695,7 +687,7 @@ export default function MapView({
           content={
             <div className="text-xs p-1 space-y-2 w-60">
               <div className="font-semibold text-gray-800 pb-1.5 border-b border-gray-100 flex items-center justify-between">
-                <span>Batas Level PVI / UVI</span>
+                <span>Batas Level PVI</span>
               </div>
               <div className="space-y-1">
                 {PVI_LEVELS.map((item) => (

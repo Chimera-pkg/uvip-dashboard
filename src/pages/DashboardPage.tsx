@@ -89,7 +89,7 @@ function RecentProjectsCard() {
                     {p.name}
                   </span>
                   <span className={getUviBadgeClass(p.uvi_score)}>
-                    UVI {p.uvi_score?.toFixed(2)}
+                    PVI {p.uvi_score?.toFixed(2)}
                   </span>
                 </div>
                 <div className="text-xs text-gray-400 mt-0.5 truncate">

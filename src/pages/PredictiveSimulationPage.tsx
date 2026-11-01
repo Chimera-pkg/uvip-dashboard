@@ -20,9 +20,7 @@ import {
 
 export default function PredictiveSimulationPage() {
   const [values, setValues] = useState<Record<string, number>>(() =>
-    Object.fromEntries(
-      sliderConfigs.map((s) => [s.key, s.defaultValue]),
-    ),
+    Object.fromEntries(sliderConfigs.map((s) => [s.key, s.defaultValue])),
   );
 
   const result = useMemo(() => simulate(values), [values]);
@@ -35,7 +33,9 @@ export default function PredictiveSimulationPage() {
       {/* Title */}
       <div className="flex items-center gap-2 mb-5">
         <ExperimentOutlined className="text-purple-500 text-xl" />
-        <h1 className="text-lg font-bold text-gray-800">Predictive Simulation</h1>
+        <h1 className="text-lg font-bold text-gray-800">
+          Predictive Simulation
+        </h1>
         <Tag color="purple" className="text-xs ml-1">
           Scenario Modeling
         </Tag>
@@ -85,9 +85,15 @@ export default function PredictiveSimulationPage() {
                 </div>
                 <Divider style={{ margin: "6px 0" }} />
                 <div className="flex justify-between items-center pt-1">
-                  <span className="text-xs text-gray-400">Current UVI Status</span>
-                  <Tag color="success" className="text-xs font-bold border-none">
-                    {selectedLocation.status} ({selectedLocation.currentUvi.toFixed(2)})
+                  <span className="text-xs text-gray-400">
+                    Current PVI Status
+                  </span>
+                  <Tag
+                    color="success"
+                    className="text-xs font-bold border-none"
+                  >
+                    {selectedLocation.status} (
+                    {selectedLocation.currentUvi.toFixed(2)})
                   </Tag>
                 </div>
               </div>
@@ -97,14 +103,12 @@ export default function PredictiveSimulationPage() {
               className="dashboard-card rounded-xl shadow-sm flex-1"
               styles={{ body: { padding: 0 } }}
               title={
-                <span className="font-semibold text-gray-800 text-sm">Location Map</span>
+                <span className="font-semibold text-gray-800 text-sm">
+                  Location Map
+                </span>
               }
             >
-              <MapView
-                height={280}
-                showStats={false}
-                initialLayer="uvi"
-              />
+              <MapView height={280} showStats={false} initialLayer="uvi" />
             </Card>
           </div>
         </Col>
@@ -121,7 +125,9 @@ export default function PredictiveSimulationPage() {
                   <span className="font-semibold text-gray-800 text-sm">
                     Adjust Design Variables
                   </span>
-                  <Tag color="blue" className="text-xs">{selectedLocation.name}</Tag>
+                  <Tag color="blue" className="text-xs">
+                    {selectedLocation.name}
+                  </Tag>
                   <CloseOutlined className="text-gray-300 cursor-pointer ml-auto" />
                 </div>
               }
@@ -148,9 +154,7 @@ export default function PredictiveSimulationPage() {
                         {s.icon} {s.label}
                       </span>
                       <Tag
-                        color={
-                          values[s.key] >= 0 ? "success" : "error"
-                        }
+                        color={values[s.key] >= 0 ? "success" : "error"}
                         className="text-sm font-bold border-none"
                         style={{ minWidth: 56, textAlign: "center" }}
                       >
@@ -234,7 +238,11 @@ export default function PredictiveSimulationPage() {
                           </td>
                           <td className="py-2.5 text-right">
                             <Tag
-                              color={r.changeType === "positive" ? "success" : "error"}
+                              color={
+                                r.changeType === "positive"
+                                  ? "success"
+                                  : "error"
+                              }
                               className="text-xs font-bold border-none"
                             >
                               {r.changeLabel}
@@ -265,7 +273,9 @@ export default function PredictiveSimulationPage() {
                         Impact of the Simulation
                       </div>
                       <Tag
-                        color={result.impact === "positive" ? "success" : "error"}
+                        color={
+                          result.impact === "positive" ? "success" : "error"
+                        }
                         className="text-sm font-bold border-none px-3 py-1"
                       >
                         {result.impact === "positive" ? "Positive" : "Negative"}
