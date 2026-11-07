@@ -8,6 +8,7 @@ import StreetPhotosPage from "./pages/StreetPhotosPage";
 import StreetVideosPage from "./pages/StreetVideosPage";
 import SpatialAnalysisPage from "./pages/SpatialAnalysisPage";
 import PredictiveSimulationPage from "./pages/PredictiveSimulationPage";
+import SegmentationResultPage from "./pages/SegmentationResultPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -56,7 +57,15 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/street-photos" element={<StreetPhotosPage />} />
+        <Route
+          path="/street-photos/segmentation-result/:photoId"
+          element={<SegmentationResultPage type="photo" />}
+        />
         <Route path="/street-videos" element={<StreetVideosPage />} />
+        <Route
+          path="/street-videos/segmentation-result/:videoId"
+          element={<SegmentationResultPage type="video" />}
+        />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
           path="/predictive-simulation"
