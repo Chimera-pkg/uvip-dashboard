@@ -11,6 +11,8 @@ import PredictiveSimulationPage from "./pages/PredictiveSimulationPage";
 import SegmentationResultPage from "./pages/SegmentationResultPage";
 import VisualAnalysisPage from "./pages/VisualAnalysisPage";
 import SemanticSegmentationPage from "./pages/SemanticSegmentationPage";
+import AiRecommendationsPage from "./pages/AiRecommendationsPage";
+import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -72,6 +74,14 @@ export default function App() {
         <Route
           path="/semantic-segmentation"
           element={<SemanticSegmentationPage />}
+        />
+        <Route
+          path="/ai-recommendations"
+          element={<AiRecommendationsPage />}
+        />
+        <Route
+          path="/ai-recommendations/:photoId"
+          element={<AiRecommendationDetailPage />}
         />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route

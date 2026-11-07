@@ -22,6 +22,7 @@ const menuKeyToPath: Record<string, string> = {
   "street-videos": "/street-videos",
   "visual-analysis": "/visual-analysis",
   "semantic-segmentation": "/semantic-segmentation",
+  "ai-recommendations": "/ai-recommendations",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",

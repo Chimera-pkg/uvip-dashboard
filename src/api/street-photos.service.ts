@@ -22,6 +22,7 @@ export interface StreetPhoto {
   error_message: string | null;
   captured_at: string;
   created_at: string;
+  uvi_score?: number | string | null;
 }
 
 export interface StreetPhotoLocation {

@@ -5,6 +5,7 @@ import {
   VideoCameraOutlined,
   EyeOutlined,
   ApartmentOutlined,
+  ThunderboltFilled,
   // HeatMapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
@@ -50,6 +51,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "semantic-segmentation",
     icon: createElement(ApartmentOutlined),
     label: "Segmentasi Semantik",
+  },
+  {
+    key: "ai-recommendations",
+    icon: createElement(ThunderboltFilled),
+    label: "Rekomendasi AI",
   },
   // {
   //   key: "spatial-analysis",
