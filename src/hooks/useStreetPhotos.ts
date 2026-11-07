@@ -12,8 +12,7 @@ export function useStreetPhotos() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchStreetPhotos = useCallback(
-    async (projectId: string, page = 1, size = 10) => {
-      if (!projectId) return;
+    async (projectId?: string, page = 1, size = 10) => {
       setLoading(true);
       setError(null);
       try {

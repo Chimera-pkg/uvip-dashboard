@@ -3,6 +3,7 @@ import {
   ProjectOutlined,
   CameraOutlined,
   VideoCameraOutlined,
+  EyeOutlined,
   // HeatMapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
@@ -38,6 +39,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "street-videos",
     icon: createElement(VideoCameraOutlined),
     label: "Street Videos",
+  },
+  {
+    key: "visual-analysis",
+    icon: createElement(EyeOutlined),
+    label: "Analisis Visual",
   },
   // {
   //   key: "spatial-analysis",

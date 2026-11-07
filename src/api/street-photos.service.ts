@@ -60,10 +60,22 @@ export interface StreetPhotoRequest {
 }
 
 export const streetPhotosService = {
-  async getStreetPhotos(projectId: string, page = 1, size = 10): Promise<PaginatedStreetPhotos> {
+  async getStreetPhotos(projectId?: string, page = 1, size = 10): Promise<PaginatedStreetPhotos> {
+    const params: Record<string, any> = { page, size };
+    if (projectId) {
+      params.project_id = projectId;
+    }
     const response = await apiClient.get("/street-photos/", {
-      params: { project_id: projectId, page, size },
+      params,
     });
+    if (Array.isArray(response.data)) {
+      return {
+        total_data: response.data.length,
+        total_pages: 1,
+        current_page: 1,
+        data: response.data,
+      };
+    }
     return response.data;
   },
 
