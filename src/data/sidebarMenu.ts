@@ -4,6 +4,7 @@ import {
   CameraOutlined,
   VideoCameraOutlined,
   EyeOutlined,
+  ApartmentOutlined,
   // HeatMapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
@@ -44,6 +45,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "visual-analysis",
     icon: createElement(EyeOutlined),
     label: "Analisis Visual",
+  },
+  {
+    key: "semantic-segmentation",
+    icon: createElement(ApartmentOutlined),
+    label: "Segmentasi Semantik",
   },
   // {
   //   key: "spatial-analysis",

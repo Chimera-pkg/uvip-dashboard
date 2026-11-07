@@ -10,6 +10,7 @@ import SpatialAnalysisPage from "./pages/SpatialAnalysisPage";
 import PredictiveSimulationPage from "./pages/PredictiveSimulationPage";
 import SegmentationResultPage from "./pages/SegmentationResultPage";
 import VisualAnalysisPage from "./pages/VisualAnalysisPage";
+import SemanticSegmentationPage from "./pages/SemanticSegmentationPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -68,6 +69,10 @@ export default function App() {
           element={<SegmentationResultPage type="video" />}
         />
         <Route path="/visual-analysis" element={<VisualAnalysisPage />} />
+        <Route
+          path="/semantic-segmentation"
+          element={<SemanticSegmentationPage />}
+        />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
           path="/predictive-simulation"
