@@ -23,6 +23,27 @@ export interface StreetPhoto {
   captured_at: string;
   created_at: string;
   uvi_score?: number | string | null;
+  prediction?: {
+    id?: string;
+    segmentation_id?: string;
+    beauty_score?: number | null;
+    safety_score?: number | null;
+    comfort_score?: number | null;
+    uvi_score?: number | null;
+    gvi_score?: number | null;
+    [key: string]: any;
+  } | null;
+  project?: {
+    id?: string;
+    name?: string;
+    location?: string | null;
+    description?: string | null;
+    created_by?: string;
+    last_opened_at?: string | null;
+    created_at?: string;
+    [key: string]: any;
+  } | null;
+  [key: string]: any;
 }
 
 export interface StreetPhotoLocation {

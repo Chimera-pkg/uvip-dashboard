@@ -8,6 +8,7 @@ import {
   ThunderboltFilled,
   HeatMapOutlined,
   SwapOutlined,
+  LineChartOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -52,6 +53,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "semantic-segmentation",
     icon: createElement(ApartmentOutlined),
     label: "Segmentasi Semantik",
+  },
+  {
+    key: "uvi-analysis",
+    icon: createElement(LineChartOutlined),
+    label: "Analisis UVI",
   },
   {
     key: "ai-recommendations",

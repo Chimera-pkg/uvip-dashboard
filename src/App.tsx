@@ -11,6 +11,7 @@ import PredictiveSimulationPage from "./pages/PredictiveSimulationPage";
 import SegmentationResultPage from "./pages/SegmentationResultPage";
 import VisualAnalysisPage from "./pages/VisualAnalysisPage";
 import SemanticSegmentationPage from "./pages/SemanticSegmentationPage";
+import UviAnalysisPage from "./pages/UviAnalysisPage";
 import AiRecommendationsPage from "./pages/AiRecommendationsPage";
 import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import UviHeatmapPage from "./pages/UviHeatmapPage";
@@ -76,6 +77,11 @@ export default function App() {
         <Route
           path="/semantic-segmentation"
           element={<SemanticSegmentationPage />}
+        />
+        <Route path="/uvi-analysis" element={<UviAnalysisPage />} />
+        <Route
+          path="/analisis-uvi"
+          element={<Navigate to="/uvi-analysis" replace />}
         />
         <Route
           path="/ai-recommendations"

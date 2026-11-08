@@ -22,6 +22,8 @@ const menuKeyToPath: Record<string, string> = {
   "street-videos": "/street-videos",
   "visual-analysis": "/visual-analysis",
   "semantic-segmentation": "/semantic-segmentation",
+  "uvi-analysis": "/uvi-analysis",
+  "analisis-uvi": "/uvi-analysis",
   "ai-recommendations": "/ai-recommendations",
   "uvi-heatmap": "/uvi-heatmap",
   "peta-panas-uvi": "/uvi-heatmap",
