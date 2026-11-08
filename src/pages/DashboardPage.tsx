@@ -89,7 +89,7 @@ function RecentProjectsCard() {
                     {p.name}
                   </span>
                   <span className={getUviBadgeClass(p.uvi_score)}>
-                    PVI {p.uvi_score?.toFixed(2)}
+                    UVI {p.uvi_score?.toFixed(2)}
                   </span>
                 </div>
                 <div className="text-xs text-gray-400 mt-0.5 truncate">
@@ -222,7 +222,7 @@ export default function DashboardPage() {
             title={
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-gray-800 text-sm">
-                  PVI Heatmap
+                  UVI Heatmap
                 </span>
               </div>
             }

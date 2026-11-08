@@ -821,10 +821,10 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
           {/* Right Column: Index, Skor Prediksi, & Visual Indicators */}
           <div className="space-y-6">
-            {/* Card 3: Urban Visual Index / Proportional Vegetation Index */}
+            {/* Card 3: Urban Visual Index */}
             <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
               <h3 className="text-base font-bold text-gray-800 mb-4">
-                Proportional Vegetation Index
+                Urban Visual Index
               </h3>
 
               <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
@@ -1028,7 +1028,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
           <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
             <div className="mb-4">
               <h3 className="text-base sm:text-lg font-bold text-gray-800 m-0">
-                Faktor Pengaruh PVI
+                Faktor Pengaruh UVI
               </h3>
               <p className="text-xs text-gray-400 m-0">
                 Kontribusi elemen visual yang mempengaruhi indeks vegetasi dan

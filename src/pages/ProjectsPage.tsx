@@ -100,7 +100,7 @@ export default function ProjectsPage() {
       ),
     },
     {
-      title: "PVI Score",
+      title: "UVI Score",
       dataIndex: "uvi_score",
       key: "uvi_score",
       render: (val: number) => (

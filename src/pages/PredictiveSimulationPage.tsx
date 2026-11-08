@@ -86,7 +86,7 @@ export default function PredictiveSimulationPage() {
                 <Divider style={{ margin: "6px 0" }} />
                 <div className="flex justify-between items-center pt-1">
                   <span className="text-xs text-gray-400">
-                    Current PVI Status
+                    Current UVI Status
                   </span>
                   <Tag
                     color="success"

@@ -342,7 +342,7 @@ function PhotoPopupContent({ loc }: { loc: PositionedLocationItem }) {
       <div className="text-[11px] text-gray-600 bg-gray-50 p-2 rounded border border-gray-100 mb-1.5 space-y-1 font-mono">
         <div className="flex justify-between items-center font-sans">
           <span className="text-gray-400 font-mono text-[10px]">
-            PVI Score:
+            UVI Score:
           </span>
           <span
             className="font-bold text-xs"
@@ -450,7 +450,7 @@ function StreetPhotoMarkers({ groups }: { groups: LocationGroup[] }) {
                   <div className="text-[11px] text-gray-600 bg-gray-50 p-2 rounded border border-gray-100 mb-2.5 space-y-1 font-mono">
                     <div className="flex justify-between items-center font-sans">
                       <span className="text-gray-400 font-mono text-[10px]">
-                        Rata-rata PVI:
+                        Rata-rata UVI:
                       </span>
                       <span
                         className="font-bold text-xs"
@@ -681,13 +681,13 @@ export default function MapView({
         <StreetPhotoMarkers groups={locationGroups} />
       </MapContainer>
 
-      {/* PVI Legend Popover (bottom-left) */}
+      {/* UVI Legend Popover (bottom-left) */}
       <div className="absolute bottom-3 left-3 z-[1000]">
         <Popover
           content={
             <div className="text-xs p-1 space-y-2 w-60">
               <div className="font-semibold text-gray-800 pb-1.5 border-b border-gray-100 flex items-center justify-between">
-                <span>Batas Level PVI</span>
+                <span>Batas Level UVI</span>
               </div>
               <div className="space-y-1">
                 {PVI_LEVELS.map((item) => (
@@ -738,7 +738,7 @@ export default function MapView({
                 style={{ backgroundColor: "#02BDDB" }}
               />
             </div>
-            <span>Legenda PVI</span>
+            <span>Legenda UVI</span>
           </button>
         </Popover>
       </div>
