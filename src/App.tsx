@@ -16,6 +16,7 @@ import AiRecommendationsPage from "./pages/AiRecommendationsPage";
 import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import UviHeatmapPage from "./pages/UviHeatmapPage";
 import CorridorComparisonPage from "./pages/CorridorComparisonPage";
+import ProjectTeamPage from "./pages/ProjectTeamPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -103,6 +104,11 @@ export default function App() {
         <Route
           path="/perbandingan-koridor"
           element={<Navigate to="/corridor-comparison" replace />}
+        />
+        <Route path="/project-team" element={<ProjectTeamPage />} />
+        <Route
+          path="/tim-proyek"
+          element={<Navigate to="/project-team" replace />}
         />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route

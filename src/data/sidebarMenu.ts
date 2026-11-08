@@ -9,6 +9,7 @@ import {
   HeatMapOutlined,
   SwapOutlined,
   LineChartOutlined,
+  TeamOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -73,6 +74,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "corridor-comparison",
     icon: createElement(SwapOutlined),
     label: "Perbandingan Koridor",
+  },
+  {
+    key: "project-team",
+    icon: createElement(TeamOutlined),
+    label: "Tim Proyek",
   },
   // {
   //   key: "spatial-analysis",
