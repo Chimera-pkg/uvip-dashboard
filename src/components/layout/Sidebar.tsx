@@ -25,6 +25,8 @@ const menuKeyToPath: Record<string, string> = {
   "ai-recommendations": "/ai-recommendations",
   "uvi-heatmap": "/uvi-heatmap",
   "peta-panas-uvi": "/uvi-heatmap",
+  "corridor-comparison": "/corridor-comparison",
+  "perbandingan-koridor": "/corridor-comparison",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",

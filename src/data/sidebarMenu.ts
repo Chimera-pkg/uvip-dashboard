@@ -7,6 +7,7 @@ import {
   ApartmentOutlined,
   ThunderboltFilled,
   HeatMapOutlined,
+  SwapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -61,6 +62,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "uvi-heatmap",
     icon: createElement(HeatMapOutlined),
     label: "Peta Panas UVI",
+  },
+  {
+    key: "corridor-comparison",
+    icon: createElement(SwapOutlined),
+    label: "Perbandingan Koridor",
   },
   // {
   //   key: "spatial-analysis",

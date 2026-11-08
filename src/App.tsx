@@ -14,6 +14,7 @@ import SemanticSegmentationPage from "./pages/SemanticSegmentationPage";
 import AiRecommendationsPage from "./pages/AiRecommendationsPage";
 import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import UviHeatmapPage from "./pages/UviHeatmapPage";
+import CorridorComparisonPage from "./pages/CorridorComparisonPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -88,6 +89,14 @@ export default function App() {
         <Route
           path="/peta-panas-uvi"
           element={<Navigate to="/uvi-heatmap" replace />}
+        />
+        <Route
+          path="/corridor-comparison"
+          element={<CorridorComparisonPage />}
+        />
+        <Route
+          path="/perbandingan-koridor"
+          element={<Navigate to="/corridor-comparison" replace />}
         />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
