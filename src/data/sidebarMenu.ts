@@ -6,7 +6,7 @@ import {
   EyeOutlined,
   ApartmentOutlined,
   ThunderboltFilled,
-  // HeatMapOutlined,
+  HeatMapOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -56,6 +56,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "ai-recommendations",
     icon: createElement(ThunderboltFilled),
     label: "Rekomendasi AI",
+  },
+  {
+    key: "uvi-heatmap",
+    icon: createElement(HeatMapOutlined),
+    label: "Peta Panas UVI",
   },
   // {
   //   key: "spatial-analysis",

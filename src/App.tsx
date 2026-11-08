@@ -13,6 +13,7 @@ import VisualAnalysisPage from "./pages/VisualAnalysisPage";
 import SemanticSegmentationPage from "./pages/SemanticSegmentationPage";
 import AiRecommendationsPage from "./pages/AiRecommendationsPage";
 import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
+import UviHeatmapPage from "./pages/UviHeatmapPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -82,6 +83,11 @@ export default function App() {
         <Route
           path="/ai-recommendations/:photoId"
           element={<AiRecommendationDetailPage />}
+        />
+        <Route path="/uvi-heatmap" element={<UviHeatmapPage />} />
+        <Route
+          path="/peta-panas-uvi"
+          element={<Navigate to="/uvi-heatmap" replace />}
         />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route

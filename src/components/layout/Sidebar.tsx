@@ -23,6 +23,8 @@ const menuKeyToPath: Record<string, string> = {
   "visual-analysis": "/visual-analysis",
   "semantic-segmentation": "/semantic-segmentation",
   "ai-recommendations": "/ai-recommendations",
+  "uvi-heatmap": "/uvi-heatmap",
+  "peta-panas-uvi": "/uvi-heatmap",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",
