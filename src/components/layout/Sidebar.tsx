@@ -3,7 +3,7 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
-import uvipLogo from "../../assets/urbanlens_logo.png";
+import uvipLogo from "../../assets/urbanlens_dark_logo.png";
 import uvipLogoSmall from "../../assets/urbanlens_logo_small.png";
 
 interface SidebarProps {

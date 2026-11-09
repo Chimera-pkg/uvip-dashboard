@@ -39,7 +39,7 @@ export default function AppHeader({
           <img
             src={uvipLogo}
             alt="UrbanLens AI"
-            className="h-8 w-auto object-contain"
+            className="h-16 w-auto object-contain"
           />
         )}
       </div>
