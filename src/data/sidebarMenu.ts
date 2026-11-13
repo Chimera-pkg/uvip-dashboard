@@ -1,5 +1,5 @@
 import {
-  DashboardOutlined,
+  HomeFilled,
   ProjectOutlined,
   CameraOutlined,
   VideoCameraOutlined,
@@ -27,23 +27,23 @@ type MenuItem = Required<MenuProps>["items"][number];
 export const sidebarMenuItems: MenuItem[] = [
   {
     key: "dashboard",
-    icon: createElement(DashboardOutlined),
-    label: "Dashboard",
+    icon: createElement(HomeFilled),
+    label: "Beranda",
   },
   {
     key: "projects",
     icon: createElement(ProjectOutlined),
-    label: "Projects",
+    label: "Projek",
   },
   {
     key: "street-photos",
     icon: createElement(CameraOutlined),
-    label: "Street Photos",
+    label: "Pustaka Foto",
   },
   {
     key: "street-videos",
     icon: createElement(VideoCameraOutlined),
-    label: "Street Videos",
+    label: "Pustaka Video",
   },
   {
     key: "visual-analysis",

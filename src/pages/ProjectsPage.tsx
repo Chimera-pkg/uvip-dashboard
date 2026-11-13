@@ -80,6 +80,11 @@ export default function ProjectsPage() {
       ),
     },
     {
+      title: "Owner",
+      key: "created",
+      render: (_: any, record: Project) => record.creator?.name,
+    },
+    {
       title: "Location",
       dataIndex: "location",
       key: "location",

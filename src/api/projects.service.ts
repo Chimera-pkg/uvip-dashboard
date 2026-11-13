@@ -14,6 +14,7 @@ export interface Project {
   safety_score: number;
   comfort_score: number;
   uvi_score: number;
+  creator: any;
 }
 
 export interface ProjectRequest {

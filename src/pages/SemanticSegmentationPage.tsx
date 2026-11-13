@@ -183,7 +183,8 @@ export default function SemanticSegmentationPage() {
   const visualCompositionItems = [
     {
       label: "Bangunan",
-      color: "#f97316",
+      // color: "#f97316",
+      color: "#8b5cf6",
       val: buildingPct,
     },
     {
@@ -198,7 +199,8 @@ export default function SemanticSegmentationPage() {
     },
     {
       label: "Permukaan / Trotoar",
-      color: "#8b5cf6",
+      // color: "#8b5cf6",
+      color: "#eab308",
       val: sidewalkPct ?? (roadPct != null ? roadPct : null),
     },
     ...(roadPct != null && sidewalkPct != null
