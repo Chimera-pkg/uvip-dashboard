@@ -14,6 +14,7 @@ import {
   PictureOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import {
   streetPhotosService,
   type StreetPhoto,
@@ -207,7 +208,7 @@ export default function SemanticSegmentationPage() {
       ? [
           {
             label: "Jalan",
-            color: "#6366f1",
+            color: "#334155",
             val: roadPct,
           },
         ]
@@ -223,6 +224,15 @@ export default function SemanticSegmentationPage() {
       val: vehiclePct ?? 0.2,
     },
   ];
+
+  // Data for the Pie Chart diagram (same source as visualCompositionItems)
+  const pieChartData = visualCompositionItems
+    .filter((item) => item.val != null && Number(item.val) > 0)
+    .map((item) => ({
+      name: item.label,
+      value: Number(Number(item.val).toFixed(1)),
+      color: item.color,
+    }));
 
   // Dynamic legends for the segmented preview (identical to SegmentationResultView)
   const candidateLegends = [
@@ -353,15 +363,20 @@ export default function SemanticSegmentationPage() {
       ) : loadingResult ? (
         // Loading state
         <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-12 xl:col-span-4 bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
               <Skeleton.Input active block style={{ height: 28 }} />
-              <Skeleton.Image active style={{ width: "100%", height: 320 }} />
+              <Skeleton.Image active style={{ width: "100%", height: 240 }} />
               <Skeleton active paragraph={{ rows: 3 }} />
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
+            <div className="lg:col-span-6 xl:col-span-4 bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
               <Skeleton.Input active block style={{ height: 28 }} />
               <Skeleton active paragraph={{ rows: 6 }} />
+            </div>
+            <div className="lg:col-span-6 xl:col-span-4 bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
+              <Skeleton.Input active block style={{ height: 28 }} />
+              <Skeleton.Button active block style={{ height: 180 }} />
+              <Skeleton active paragraph={{ rows: 2 }} />
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 space-y-4">
@@ -395,10 +410,10 @@ export default function SemanticSegmentationPage() {
       ) : resultData ? (
         // Results Layout
         <div className="space-y-6">
-          {/* Top Row: 2 Columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            {/* LEFT COLUMN: Foto Asli & Hasil Segmentasi AI */}
-            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-5 space-y-4">
+          {/* Top Row: Responsive 3 Cards Layout (No Empty Space) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* CARD 1: Foto Asli & Hasil Segmentasi AI */}
+            <div className="lg:col-span-12 xl:col-span-4 bg-white rounded-2xl shadow-xs border border-gray-100 p-5 space-y-4 flex flex-col justify-between">
               {/* Card Header: Filename & Status Badge */}
               <div className="flex justify-between items-center">
                 <h3
@@ -451,7 +466,7 @@ export default function SemanticSegmentationPage() {
 
               {/* Photo View Container */}
               {activeTab === "asli" && (
-                <div className="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-100 shadow-inner flex items-center justify-center min-h-72 sm:min-h-80">
+                <div className="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-100 shadow-inner flex items-center justify-center min-h-64 sm:min-h-72 h-64 sm:h-72">
                   {rawImageUrl ? (
                     <Image
                       src={rawImageUrl}
@@ -465,7 +480,7 @@ export default function SemanticSegmentationPage() {
                       }}
                     />
                   ) : (
-                    <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
+                    <div className="h-64 sm:h-72 flex items-center justify-center text-gray-400 text-sm">
                       Foto asli tidak tersedia
                     </div>
                   )}
@@ -477,7 +492,7 @@ export default function SemanticSegmentationPage() {
 
               {activeTab === "segmentasi" && (
                 <div className="space-y-4">
-                  <div className="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-100 shadow-inner flex items-center justify-center min-h-72 sm:min-h-80">
+                  <div className="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-100 shadow-inner flex items-center justify-center min-h-64 sm:min-h-72 h-64 sm:h-72">
                     {overlayUrl ? (
                       <Image
                         src={overlayUrl}
@@ -491,7 +506,7 @@ export default function SemanticSegmentationPage() {
                         }}
                       />
                     ) : (
-                      <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
+                      <div className="h-64 sm:h-72 flex items-center justify-center text-gray-400 text-sm">
                         Overlay segmentasi tidak tersedia
                       </div>
                     )}
@@ -614,53 +629,123 @@ export default function SemanticSegmentationPage() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Komposisi Visual (Matching Image 1) */}
-            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6 space-y-4">
-              <h3 className="text-base font-bold text-gray-800 m-0">
-                Komposisi Visual
-              </h3>
+            {/* CARD 2: Komposisi Visual (Horizontal Progress Bars) */}
+            <div className="lg:col-span-6 xl:col-span-4 bg-white rounded-2xl shadow-xs border border-gray-100 p-5 sm:p-6 space-y-4 flex flex-col justify-between">
+              <div>
+                <h3 className="text-base font-bold text-gray-800 m-0">
+                  Komposisi Visual
+                </h3>
 
-              {/* Reference Score Box (mIoU) */}
-              {/* <div className="bg-blue-50/70 border border-blue-100 rounded-xl p-3.5 flex justify-between items-center">
-                <div>
-                  <span className="text-xs text-blue-500 font-medium block">
-                    Segmentasi Semantik
-                  </span>
-                  <span className="text-xl sm:text-2xl font-bold text-blue-600 block">
-                    mIoU: {r2Score}
-                  </span>
+                {/* Visual Classes Horizontal Progress Bars */}
+                <div className="space-y-3.5 pt-3">
+                  {visualCompositionItems.map((item) => {
+                    const displayPct =
+                      item.val != null ? Number(item.val).toFixed(1) : "0";
+                    const pctNum =
+                      item.val != null
+                        ? Math.min(100, Math.max(0, item.val))
+                        : 0;
+
+                    return (
+                      <div key={item.label} className="space-y-1.5">
+                        <div className="flex justify-between items-center text-xs font-semibold text-gray-700">
+                          <span>{item.label}</span>
+                          <span className="font-bold text-gray-800">
+                            {displayPct}%
+                          </span>
+                        </div>
+                        <Progress
+                          percent={pctNum}
+                          showInfo={false}
+                          strokeColor={item.color}
+                          className="m-0"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-                <span className="text-xs text-blue-400 font-medium self-start">
-                  Skor referensi
+              </div>
+            </div>
+
+            {/* CARD 3: Diagram Pie Chart Komposisi Visual */}
+            <div className="lg:col-span-6 xl:col-span-4 bg-white rounded-2xl shadow-xs border border-gray-100 p-5 sm:p-6 space-y-4 flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <h3 className="text-base font-bold text-gray-800 m-0">
+                  Diagram Komposisi Visual
+                </h3>
+                <span className="text-xs text-gray-400 font-medium">
+                  Proporsi Kelas (%)
                 </span>
-              </div> */}
+              </div>
 
-              {/* Visual Classes Horizontal Progress Bars */}
-              <div className="space-y-4 pt-1">
-                {visualCompositionItems.map((item) => {
-                  const displayPct =
-                    item.val != null ? Number(item.val).toFixed(1) : "0";
-                  const pctNum =
-                    item.val != null ? Math.min(100, Math.max(0, item.val)) : 0;
+              {pieChartData.length > 0 ? (
+                <div className="space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="w-full h-56 sm:h-60 relative flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={pieChartData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={45}
+                          outerRadius={75}
+                          paddingAngle={3}
+                          dataKey="value"
+                          strokeWidth={1}
+                          stroke="#ffffff"
+                        >
+                          {pieChartData.map((entry, index) => (
+                            <Cell
+                              key={`pie-cell-${index}`}
+                              fill={entry.color}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          formatter={(value: any, name: any) => [
+                            `${value}%`,
+                            name,
+                          ]}
+                          contentStyle={{
+                            backgroundColor: "#ffffff",
+                            borderRadius: "12px",
+                            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                            border: "1px solid #f3f4f6",
+                            fontSize: "12px",
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
 
-                  return (
-                    <div key={item.label} className="space-y-1.5">
-                      <div className="flex justify-between items-center text-xs font-semibold text-gray-700">
-                        <span>{item.label}</span>
-                        <span className="font-bold text-gray-800">
-                          {displayPct}%
+                  {/* Legend Grid */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+                    {pieChartData.map((item) => (
+                      <div
+                        key={item.name}
+                        className="flex items-center justify-between text-xs p-2 rounded-xl bg-gray-50/70 border border-gray-100/80"
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <span
+                            className="w-2.5 h-2.5 rounded-full shrink-0"
+                            style={{ backgroundColor: item.color }}
+                          />
+                          <span className="text-gray-700 font-medium truncate">
+                            {item.name}
+                          </span>
+                        </div>
+                        <span className="font-bold text-gray-900 ml-2">
+                          {item.value}%
                         </span>
                       </div>
-                      <Progress
-                        percent={pctNum}
-                        showInfo={false}
-                        strokeColor={item.color}
-                        className="m-0"
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-400 text-xs">
+                  Data komposisi visual tidak tersedia.
+                </div>
+              )}
             </div>
           </div>
 
