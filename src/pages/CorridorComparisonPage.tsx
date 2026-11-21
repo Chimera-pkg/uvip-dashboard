@@ -157,31 +157,31 @@ export default function CorridorComparisonPage() {
     return [
       {
         key: "building",
-        title: "Indeks Keterlihatan Bangunan",
+        title: "Keterlihatan Bangunan",
         value: toPct(buildingVal),
         color: "#f97316", // Orange
       },
       {
         key: "vegetation",
-        title: "Indeks Cakupan Vegetasi",
+        title: "Cakupan Vegetasi",
         value: toPct(vegVal),
         color: "#10b981", // Teal / Emerald
       },
       {
         key: "sky",
-        title: "Indeks Keterbukaan Langit",
+        title: "Keterbukaan Langit",
         value: toPct(skyVal),
         color: "#0ea5e9", // Sky blue
       },
       {
         key: "walkability",
-        title: "Indeks Aksesibilitas Permukaan",
+        title: "Aksesibilitas Permukaan",
         value: toPct(walkVal),
         color: "#8b5cf6", // Purple
       },
       {
         key: "clutter",
-        title: "Indeks Dominasi Visual",
+        title: "Dominasi Visual",
         value: toPct(clutterVal),
         color: "#eab308", // Yellow / Amber
       },

@@ -148,23 +148,74 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
     originalVideoUrl,
   ]);
 
+  const loading = isVideo ? videoLoading : photoLoading;
+  const error = isVideo ? videoError : photoError;
+  const rawData: any = isVideo ? videoData : photoData;
+
+  useEffect(() => {
+    const pid =
+      stateData.projectId || rawData?.project?.id || rawData?.project_id;
+    if (pid) {
+      if (isVideo) {
+        sessionStorage.setItem("selected_street_video_project_id", pid);
+      } else {
+        sessionStorage.setItem("selected_street_photo_project_id", pid);
+      }
+    }
+    if (stateData.currentPage) {
+      if (isVideo) {
+        sessionStorage.setItem(
+          "selected_street_video_page",
+          String(stateData.currentPage),
+        );
+      } else {
+        sessionStorage.setItem(
+          "selected_street_photo_page",
+          String(stateData.currentPage),
+        );
+      }
+    }
+  }, [isVideo, stateData, rawData]);
+
   const handleBack = () => {
     if (propOnBack) {
       propOnBack();
-    } else if (window.history.length > 1) {
+      return;
+    }
+
+    const targetPath = isVideo ? "/street-videos" : "/street-photos";
+    const projectIdToRestore =
+      stateData.projectId ||
+      rawData?.project?.id ||
+      rawData?.project_id ||
+      (isVideo
+        ? sessionStorage.getItem("selected_street_video_project_id")
+        : sessionStorage.getItem("selected_street_photo_project_id"));
+
+    const currentPageToRestore =
+      stateData.currentPage ||
+      (isVideo
+        ? Number(sessionStorage.getItem("selected_street_video_page")) || 1
+        : Number(sessionStorage.getItem("selected_street_photo_page")) || 1);
+
+    if (window.history.length > 1) {
       navigate(-1);
     } else {
-      navigate(isVideo ? "/street-videos" : "/street-photos");
+      const search = projectIdToRestore
+        ? `?projectId=${projectIdToRestore}&page=${currentPageToRestore}`
+        : "";
+      navigate(`${targetPath}${search}`, {
+        state: {
+          projectId: projectIdToRestore,
+          currentPage: currentPageToRestore,
+        },
+      });
     }
   };
 
   const handleGoHome = () => {
     navigate("/dashboard");
   };
-
-  const loading = isVideo ? videoLoading : photoLoading;
-  const error = isVideo ? videoError : photoError;
-  const rawData: any = isVideo ? videoData : photoData;
 
   // Render loading state
   if (loading) {
@@ -453,14 +504,14 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
   // Dynamic Visual Environment Indicators: only include indicators with non-null values
   const rawEnvIndicators = [
     {
-      title: "Indeks Visibilitas Bangunan",
+      title: "Visibilitas Bangunan",
       subtitle: "Visibilitas bangunan di sekitar jalan",
       icon: <ApartmentOutlined className="text-purple-500 text-lg" />,
       pct: buildingPct != null ? Math.min(100, Math.round(buildingPct)) : null,
       color: "#8b5cf6",
     },
     {
-      title: "Indeks Tutupan Vegetasi",
+      title: "Tutupan Vegetasi",
       subtitle: "Persentase tutupan kanopi dan tanaman",
       icon: <span className="text-emerald-500 text-lg">🌿</span>,
       pct:
@@ -468,14 +519,14 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
       color: "#22c55e",
     },
     {
-      title: "Indeks Keterbukaan Langit",
+      title: "Keterbukaan Langit",
       subtitle: "Keterbukaan pandangan langit bebas halangan",
       icon: <span className="text-sky-500 text-lg">☀️</span>,
       pct: skyPct != null ? Math.min(100, Math.round(skyPct)) : null,
       color: "#00b4d8",
     },
     {
-      title: "Indeks Aksesibilitas Area",
+      title: "Aksesibilitas Area",
       subtitle: "Kenyamanan dan kelayakan trotoar pejalan kaki",
       icon: <span className="text-amber-500 text-lg">🚶</span>,
       pct:
@@ -492,7 +543,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
       color: "#f59e0b",
     },
     {
-      title: "Indeks Kesemrawutan Visual",
+      title: "Kesemrawutan Visual",
       subtitle: "Tingkat kesemrawutan objek dan signage",
       icon: <EyeOutlined className="text-rose-500 text-lg" />,
       pct:
@@ -717,8 +768,8 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <Image
                     src={rawImageUrl}
                     alt="Foto Asli"
-                    rootClassName="w-full h-72 sm:h-80"
-                    className="w-full h-72 sm:h-80 object-cover"
+                    rootClassName="w-full h-full"
+                    className="w-full h-full object-cover"
                     style={{
                       width: "100%",
                       height: "320px",
@@ -774,11 +825,11 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <Image
                     src={overlayUrl}
                     alt="Foto Overlay AI"
-                    rootClassName="w-full h-72 sm:h-80"
-                    className="w-full h-72 sm:h-80 object-cover"
+                    rootClassName="w-full h-full"
+                    className="w-full h-full object-cover"
                     style={{
                       width: "100%",
-                      height: "320px",
+                      height: "100%",
                       objectFit: "cover",
                     }}
                   />
@@ -1140,11 +1191,11 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <Image
                     src={generatedImageUrl}
                     alt="Visualisasi prediktif berbasis AI"
-                    rootClassName="w-full h-80 sm:h-96"
-                    className="w-full h-80 sm:h-96 object-cover"
+                    rootClassName="w-full h-full"
+                    className="w-full h-full object-cover"
                     style={{
                       width: "100%",
-                      height: "384px",
+                      height: "100%",
                       objectFit: "cover",
                     }}
                   />

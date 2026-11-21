@@ -456,11 +456,11 @@ export default function SemanticSegmentationPage() {
                     <Image
                       src={rawImageUrl}
                       alt="Foto Asli"
-                      rootClassName="w-full h-72 sm:h-80"
-                      className="w-full h-72 sm:h-80 object-cover"
+                      rootClassName="w-full h-full"
+                      className="w-full h-full object-cover"
                       style={{
                         width: "100%",
-                        height: "320px",
+                        height: "100%",
                         objectFit: "cover",
                       }}
                     />
@@ -482,11 +482,11 @@ export default function SemanticSegmentationPage() {
                       <Image
                         src={overlayUrl}
                         alt="Segmentasi AI"
-                        rootClassName="w-full h-72 sm:h-80"
-                        className="w-full h-72 sm:h-80 object-cover"
+                        rootClassName="w-full h-full"
+                        className="w-full h-full object-cover"
                         style={{
                           width: "100%",
-                          height: "320px",
+                          height: "100%",
                           objectFit: "cover",
                         }}
                       />
@@ -540,7 +540,7 @@ export default function SemanticSegmentationPage() {
                           className="w-full h-full object-cover"
                           style={{
                             width: "100%",
-                            height: "240px",
+                            height: "100%",
                             objectFit: "cover",
                           }}
                         />
@@ -562,7 +562,7 @@ export default function SemanticSegmentationPage() {
                           className="w-full h-full object-cover"
                           style={{
                             width: "100%",
-                            height: "240px",
+                            height: "100%",
                             objectFit: "cover",
                           }}
                         />

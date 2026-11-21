@@ -213,14 +213,14 @@ export default function VisualAnalysisPage() {
   // Dynamic Visual Environment Indicators (exact colors and icons from SegmentationResultView)
   const rawEnvIndicators = [
     {
-      title: "Indeks Visibilitas Bangunan",
+      title: "Visibilitas Bangunan",
       subtitle: "Visibilitas bangunan di sekitar jalan",
       icon: <ApartmentOutlined className="text-purple-500 text-lg" />,
       pct: buildingPct != null ? Math.min(100, Math.round(buildingPct)) : null,
       color: "#8b5cf6",
     },
     {
-      title: "Indeks Tutupan Vegetasi",
+      title: "Tutupan Vegetasi",
       subtitle: "Persentase tutupan kanopi dan tanaman",
       icon: <span className="text-emerald-500 text-lg">🌿</span>,
       pct:
@@ -228,14 +228,14 @@ export default function VisualAnalysisPage() {
       color: "#22c55e",
     },
     {
-      title: "Indeks Keterbukaan Langit",
+      title: "Keterbukaan Langit",
       subtitle: "Keterbukaan pandangan langit bebas halangan",
       icon: <span className="text-sky-500 text-lg">☀️</span>,
       pct: skyPct != null ? Math.min(100, Math.round(skyPct)) : null,
       color: "#00b4d8",
     },
     {
-      title: "Indeks Aksesibilitas Area",
+      title: "Aksesibilitas Area",
       subtitle: "Kenyamanan dan kelayakan trotoar pejalan kaki",
       icon: <span className="text-amber-500 text-lg">🚶</span>,
       pct:
@@ -252,7 +252,7 @@ export default function VisualAnalysisPage() {
       color: "#f59e0b",
     },
     {
-      title: "Indeks Kesemrawutan Visual",
+      title: "Kesemrawutan Visual",
       subtitle: "Tingkat kesemrawutan objek dan signage",
       icon: <EyeOutlined className="text-rose-500 text-lg" />,
       pct:
@@ -438,11 +438,11 @@ export default function VisualAnalysisPage() {
                     <Image
                       src={rawImageUrl}
                       alt="Foto Asli"
-                      rootClassName="w-full h-72 sm:h-80"
-                      className="w-full h-72 sm:h-80 object-cover"
+                      rootClassName="w-full h-full"
+                      className="w-full h-full object-cover"
                       style={{
                         width: "100%",
-                        height: "320px",
+                        height: "100%",
                         objectFit: "cover",
                       }}
                     />
@@ -464,11 +464,11 @@ export default function VisualAnalysisPage() {
                       <Image
                         src={overlayUrl}
                         alt="Segmentasi AI"
-                        rootClassName="w-full h-72 sm:h-80"
-                        className="w-full h-72 sm:h-80 object-cover"
+                        rootClassName="w-full h-full"
+                        className="w-full h-full object-cover"
                         style={{
                           width: "100%",
-                          height: "320px",
+                          height: "100%",
                           objectFit: "cover",
                         }}
                       />
@@ -522,7 +522,7 @@ export default function VisualAnalysisPage() {
                           className="w-full h-full object-cover"
                           style={{
                             width: "100%",
-                            height: "240px",
+                            height: "100%",
                             objectFit: "cover",
                           }}
                         />
@@ -544,7 +544,7 @@ export default function VisualAnalysisPage() {
                           className="w-full h-full object-cover"
                           style={{
                             width: "100%",
-                            height: "240px",
+                            height: "100%",
                             objectFit: "cover",
                           }}
                         />

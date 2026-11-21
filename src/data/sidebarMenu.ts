@@ -38,12 +38,12 @@ export const sidebarMenuItems: MenuItem[] = [
   {
     key: "street-photos",
     icon: createElement(CameraOutlined),
-    label: "Pustaka Foto",
+    label: "Galeri Foto",
   },
   {
     key: "street-videos",
     icon: createElement(VideoCameraOutlined),
-    label: "Pustaka Video",
+    label: "Galeri Video",
   },
   {
     key: "visual-analysis",

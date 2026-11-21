@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Card, Select, Pagination, Modal, Button } from "antd";
 import {
   PlayCircleFilled,
@@ -14,13 +14,37 @@ import dayjs from "dayjs";
 
 export default function StreetVideosPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data, fetchStreetVideos } = useStreetVideos();
   const { projects, fetchProjects, loading: loadingProjects } = useProjects();
 
+  const locationState = (location.state as any) || {};
+
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null,
+    () => {
+      return (
+        locationState.projectId ||
+        searchParams.get("projectId") ||
+        sessionStorage.getItem("selected_street_video_project_id") ||
+        null
+      );
+    },
   );
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [currentPage, setCurrentPage] = useState<number>(() => {
+    const fromState = locationState.currentPage;
+    const fromSearch = searchParams.get("page");
+    const fromStorage = sessionStorage.getItem("selected_street_video_page");
+    return fromState
+      ? Number(fromState)
+      : fromSearch
+        ? Number(fromSearch)
+        : fromStorage
+          ? Number(fromStorage)
+          : 1;
+  });
+
   const [pageSize, setPageSize] = useState(6);
   const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
@@ -32,8 +56,54 @@ export default function StreetVideosPage() {
   useEffect(() => {
     if (selectedProjectId) {
       fetchStreetVideos(selectedProjectId, currentPage, pageSize);
+      setSearchParams(
+        (prev) => {
+          const currentPid = prev.get("projectId");
+          const currentPageStr = prev.get("page");
+          if (
+            currentPid !== selectedProjectId ||
+            currentPageStr !== String(currentPage)
+          ) {
+            return { projectId: selectedProjectId, page: String(currentPage) };
+          }
+          return prev;
+        },
+        { replace: true },
+      );
     }
-  }, [selectedProjectId, currentPage, pageSize, fetchStreetVideos]);
+  }, [
+    selectedProjectId,
+    currentPage,
+    pageSize,
+    fetchStreetVideos,
+    setSearchParams,
+  ]);
+
+  const handleProjectChange = (val: string | null) => {
+    setSelectedProjectId(val || null);
+    setCurrentPage(1);
+    if (val) {
+      sessionStorage.setItem("selected_street_video_project_id", val);
+      sessionStorage.setItem("selected_street_video_page", "1");
+      setSearchParams({ projectId: val, page: "1" }, { replace: true });
+    } else {
+      sessionStorage.removeItem("selected_street_video_project_id");
+      sessionStorage.removeItem("selected_street_video_page");
+      setSearchParams({}, { replace: true });
+    }
+  };
+
+  const handlePageChange = (page: number, size: number) => {
+    setCurrentPage(page);
+    setPageSize(size);
+    sessionStorage.setItem("selected_street_video_page", String(page));
+    if (selectedProjectId) {
+      setSearchParams(
+        { projectId: selectedProjectId, page: String(page) },
+        { replace: true },
+      );
+    }
+  };
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -42,23 +112,22 @@ export default function StreetVideosPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1">
-            Street Videos
+            Galeri Video
           </h1>
           <p className="text-gray-500 text-sm">
-            Recorded in the Android app or uploaded from your phone gallery.
+            Video yang direkam melalui aplikasi Android atau diunggah dari
+            galeri ponsel.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <Select
-            placeholder="Select a Project"
+            placeholder="Silahkan Pilih Projek"
             className="w-full sm:w-50"
             loading={loadingProjects}
-            onChange={(val) => {
-              setSelectedProjectId(val);
-              setCurrentPage(1);
-            }}
+            onChange={handleProjectChange}
             options={projects.map((p) => ({ label: p.name, value: p.id }))}
             value={selectedProjectId}
+            allowClear
           />
         </div>
       </div>
@@ -93,21 +162,11 @@ export default function StreetVideosPage() {
                       className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity"
                     />
 
-                    {/* Top Left: Aspect Ratio mock */}
-                    <div className="absolute top-3 left-3 bg-gray-900/80 text-white text-xs px-2 py-1 rounded-md font-medium">
-                      16:9
-                    </div>
-
                     {/* Center Play Button */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                         <PlayCircleFilled className="text-3xl text-gray-800" />
                       </div>
-                    </div>
-
-                    {/* Bottom Right: Duration mock */}
-                    <div className="absolute bottom-3 right-3 bg-gray-900/80 text-white text-xs px-2 py-1 rounded-md font-medium">
-                      01:18
                     </div>
                   </div>
 
@@ -167,13 +226,15 @@ export default function StreetVideosPage() {
                             state: {
                               originalVideoUrl: fileUrl,
                               originalFilename: record.original_filename,
+                              projectId: selectedProjectId,
+                              currentPage,
                             },
                           },
                         )
                       }
                       className="font-semibold flex items-center gap-1.5 text-blue-600 hover:text-blue-700"
                     >
-                      View Result <ArrowRightOutlined />
+                      Lihat Hasil <ArrowRightOutlined />
                     </Button>
                   </div>
                 </Card>
@@ -187,10 +248,7 @@ export default function StreetVideosPage() {
                 current={currentPage}
                 pageSize={pageSize}
                 total={data?.total_data || 0}
-                onChange={(page, size) => {
-                  setCurrentPage(page);
-                  setPageSize(size);
-                }}
+                onChange={handlePageChange}
                 showSizeChanger
               />
             </div>
@@ -200,7 +258,7 @@ export default function StreetVideosPage() {
         <div className="flex flex-col items-center justify-center h-64 bg-white rounded-xl border-2 border-dashed border-gray-300">
           <div className="text-4xl mb-3">📁</div>
           <p className="text-gray-500 font-medium">
-            Please select a project to view its street videos
+            Silahkan pilih projek untuk menampilkan video
           </p>
         </div>
       )}

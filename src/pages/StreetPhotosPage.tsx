@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Button, Card, Select, Image, Pagination, message } from "antd";
 import {
   EnvironmentOutlined,
@@ -15,13 +15,35 @@ import dayjs from "dayjs";
 
 export default function StreetPhotosPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data, fetchStreetPhotos } = useStreetPhotos();
   const { projects, fetchProjects, loading: loadingProjects } = useProjects();
 
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null,
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  const locationState = (location.state as any) || {};
+
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() => {
+    return (
+      locationState.projectId ||
+      searchParams.get("projectId") ||
+      sessionStorage.getItem("selected_street_photo_project_id") ||
+      null
+    );
+  });
+
+  const [currentPage, setCurrentPage] = useState<number>(() => {
+    const fromState = locationState.currentPage;
+    const fromSearch = searchParams.get("page");
+    const fromStorage = sessionStorage.getItem("selected_street_photo_page");
+    return fromState
+      ? Number(fromState)
+      : fromSearch
+        ? Number(fromSearch)
+        : fromStorage
+          ? Number(fromStorage)
+          : 1;
+  });
+
   const [pageSize, setPageSize] = useState(6);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -32,8 +54,48 @@ export default function StreetPhotosPage() {
   useEffect(() => {
     if (selectedProjectId) {
       fetchStreetPhotos(selectedProjectId, currentPage, pageSize);
+      setSearchParams(
+        (prev) => {
+          const currentPid = prev.get("projectId");
+          const currentPageStr = prev.get("page");
+          if (
+            currentPid !== selectedProjectId ||
+            currentPageStr !== String(currentPage)
+          ) {
+            return { projectId: selectedProjectId, page: String(currentPage) };
+          }
+          return prev;
+        },
+        { replace: true },
+      );
     }
-  }, [selectedProjectId, currentPage, pageSize, fetchStreetPhotos]);
+  }, [selectedProjectId, currentPage, pageSize, fetchStreetPhotos, setSearchParams]);
+
+  const handleProjectChange = (val: string | null) => {
+    setSelectedProjectId(val || null);
+    setCurrentPage(1);
+    if (val) {
+      sessionStorage.setItem("selected_street_photo_project_id", val);
+      sessionStorage.setItem("selected_street_photo_page", "1");
+      setSearchParams({ projectId: val, page: "1" }, { replace: true });
+    } else {
+      sessionStorage.removeItem("selected_street_photo_project_id");
+      sessionStorage.removeItem("selected_street_photo_page");
+      setSearchParams({}, { replace: true });
+    }
+  };
+
+  const handlePageChange = (page: number, size: number) => {
+    setCurrentPage(page);
+    setPageSize(size);
+    sessionStorage.setItem("selected_street_photo_page", String(page));
+    if (selectedProjectId) {
+      setSearchParams(
+        { projectId: selectedProjectId, page: String(page) },
+        { replace: true },
+      );
+    }
+  };
 
   const handleExport = async () => {
     if (!selectedProjectId) return;
@@ -67,23 +129,22 @@ export default function StreetPhotosPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1">
-            Street Photos
+            Galeri Foto
           </h1>
           <p className="text-gray-500 text-sm">
-            Recorded in the Android app or uploaded from your phone gallery.
+            Foto yang direkam melalui aplikasi Android atau diunggah dari galeri
+            ponsel.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <Select
-            placeholder="Select a Project"
+            placeholder="Silahkan Pilih Projek"
             className="w-full sm:w-50"
             loading={loadingProjects}
-            onChange={(val) => {
-              setSelectedProjectId(val);
-              setCurrentPage(1);
-            }}
+            onChange={handleProjectChange}
             options={projects.map((p) => ({ label: p.name, value: p.id }))}
             value={selectedProjectId}
+            allowClear
           />
           {selectedProjectId && (
             <Button
@@ -92,7 +153,7 @@ export default function StreetPhotosPage() {
               onClick={handleExport}
               loading={isExporting}
             >
-              Export to Excel
+              Export ke Excel
             </Button>
           )}
         </div>
@@ -200,13 +261,15 @@ export default function StreetPhotosPage() {
                             state: {
                               originalPhotoUrl: fileUrl,
                               originalFilename: record.original_filename,
+                              projectId: selectedProjectId,
+                              currentPage,
                             },
                           },
                         )
                       }
                       className="font-semibold flex items-center gap-1.5 text-blue-600 hover:text-blue-700"
                     >
-                      View Result <ArrowRightOutlined />
+                      Lihat Hasil <ArrowRightOutlined />
                     </Button>
                   </div>
                 </Card>
@@ -220,20 +283,17 @@ export default function StreetPhotosPage() {
                 current={currentPage}
                 pageSize={pageSize}
                 total={data?.total_data || 0}
-                onChange={(page, size) => {
-                  setCurrentPage(page);
-                  setPageSize(size);
-                }}
+                onChange={handlePageChange}
                 showSizeChanger
               />
             </div>
           )}
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center h-64 bg-white rounded-xl border-2 border-dashed border-gray-300">
+        <div className="flex flex-col items-center justify-center h-48 bg-white rounded-xl border-2 border-dashed border-gray-300">
           <div className="text-4xl mb-3">📁</div>
           <p className="text-gray-500 font-medium">
-            Please select a project to view its street photos
+            Silahkan pilih projek untuk menampilkan foto
           </p>
         </div>
       )}
