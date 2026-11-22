@@ -18,8 +18,10 @@ export interface User {
   email: string;
   role: string;
   is_active: boolean;
-  last_login_at?: string;
+  last_login_at?: string | null;
   created_at: string;
+  profile_filename?: string | null;
+  profile_file_path?: string | null;
 }
 
 export interface LoginResponse {

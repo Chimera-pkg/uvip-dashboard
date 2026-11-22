@@ -33,14 +33,14 @@ import type {
   LLMAdviceRecommendation,
 } from "../api/segmentation-results.service";
 
-const CLOUDFLARE_BASE =
-  "https://auctions-chemicals-latitude-typing.trycloudflare.com";
+// const CLOUDFLARE_BASE =
+//   "https://auctions-chemicals-latitude-typing.trycloudflare.com";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export function resolveMediaUrl(
   pathOrUrl?: string | null,
-  fallbackBase = CLOUDFLARE_BASE,
+  fallbackBase = API_BASE_URL,
 ): string {
   if (!pathOrUrl) return "";
   const trimmed = pathOrUrl.trim();

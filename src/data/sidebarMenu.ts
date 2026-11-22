@@ -10,6 +10,7 @@ import {
   SwapOutlined,
   LineChartOutlined,
   TeamOutlined,
+  UserOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -79,6 +80,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "project-team",
     icon: createElement(TeamOutlined),
     label: "Tim Proyek",
+  },
+  {
+    key: "profile",
+    icon: createElement(UserOutlined),
+    label: "Profil Pengguna",
   },
   // {
   //   key: "spatial-analysis",

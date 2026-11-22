@@ -17,6 +17,7 @@ import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import UviHeatmapPage from "./pages/UviHeatmapPage";
 import CorridorComparisonPage from "./pages/CorridorComparisonPage";
 import ProjectTeamPage from "./pages/ProjectTeamPage";
+import UserProfilePage from "./pages/UserProfilePage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -109,6 +110,11 @@ export default function App() {
         <Route
           path="/tim-proyek"
           element={<Navigate to="/project-team" replace />}
+        />
+        <Route path="/profile" element={<UserProfilePage />} />
+        <Route
+          path="/user-profile"
+          element={<Navigate to="/profile" replace />}
         />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route

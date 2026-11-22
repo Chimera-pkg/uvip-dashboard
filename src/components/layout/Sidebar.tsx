@@ -3,6 +3,7 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
+import { resolveMediaUrl } from "../SegmentationResultView";
 import uvipLogo from "../../assets/urbanlens_dark_logo.png";
 import uvipLogoSmall from "../../assets/urbanlens_logo_small.png";
 
@@ -31,6 +32,8 @@ const menuKeyToPath: Record<string, string> = {
   "perbandingan-koridor": "/corridor-comparison",
   "project-team": "/project-team",
   "tim-proyek": "/project-team",
+  profile: "/profile",
+  "user-profile": "/profile",
   "spatial-analysis": "/spatial-analysis",
   "predictive-simulation": "/predictive-simulation",
   "data-upload": "/data-management/upload",
@@ -92,11 +95,27 @@ export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
       </div>
 
       {/* User Profile */}
-      {!collapsed && (
-        <div className="mx-3 mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
+      {!collapsed ? (
+        <div
+          onClick={() => {
+            navigate("/profile");
+            onItemClick?.();
+          }}
+          className={`mx-3 mb-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer group ${
+            activeKey === "profile" || activeKey === "user-profile"
+              ? "bg-white/15 border-blue-400/50 shadow-sm"
+              : ""
+          }`}
+          title="Lihat Profil Pengguna"
+        >
           <div className="flex items-center gap-3">
             <Avatar
               size={40}
+              src={
+                user?.profile_file_path
+                  ? resolveMediaUrl(user.profile_file_path)
+                  : undefined
+              }
               style={{
                 background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
                 fontWeight: 600,
@@ -105,7 +124,7 @@ export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </Avatar>
             <div className="flex-1 min-w-0">
-              <div className="text-white text-sm font-semibold truncate capitalize">
+              <div className="text-white text-sm font-semibold truncate capitalize group-hover:text-blue-300 transition-colors">
                 {user?.name || "User"}
               </div>
               <div className="text-blue-300/70 text-xs capitalize">
@@ -113,16 +132,45 @@ export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
               </div>
             </div>
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 logout();
                 onItemClick?.();
               }}
-              className="text-slate-400 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none"
+              className="text-slate-400 hover:text-red-400 transition-colors cursor-pointer bg-transparent border-none p-1.5 rounded-lg hover:bg-white/10"
               title="Logout"
             >
               <LogoutOutlined />
             </button>
           </div>
+        </div>
+      ) : (
+        <div
+          onClick={() => {
+            navigate("/profile");
+            onItemClick?.();
+          }}
+          className={`mx-auto mb-4 p-2 rounded-xl cursor-pointer hover:bg-white/10 transition-all ${
+            activeKey === "profile" || activeKey === "user-profile"
+              ? "bg-white/15"
+              : ""
+          }`}
+          title="Lihat Profil Pengguna"
+        >
+          <Avatar
+            size={38}
+            src={
+              user?.profile_file_path
+                ? resolveMediaUrl(user.profile_file_path)
+                : undefined
+            }
+            style={{
+              background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+              fontWeight: 600,
+            }}
+          >
+            {user?.name?.charAt(0)?.toUpperCase() || "U"}
+          </Avatar>
         </div>
       )}
     </div>
