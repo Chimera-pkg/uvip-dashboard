@@ -639,35 +639,35 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
   const downloadUrl = isVideo ? segmentedVideoUrl : overlayUrl;
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-16 font-sans">
+    <div className="max-w-7xl mx-auto px-2.5 sm:px-6 py-4 pb-16 font-sans w-full overflow-x-hidden min-w-0">
       {/* Top Header Navigation Bar */}
-      <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-3.5 sm:p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <Button
             type="text"
             icon={<LeftOutlined />}
             onClick={handleBack}
-            className="flex items-center justify-center text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-100"
+            className="flex items-center justify-center text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-100 shrink-0"
           >
             Kembali
           </Button>
-          <div className="h-5 w-px bg-gray-200" />
-          <h1 className="text-lg sm:text-xl font-bold text-gray-800 m-0">
+          <div className="h-5 w-px bg-gray-200 shrink-0" />
+          <h1 className="text-base sm:text-xl font-bold text-gray-800 m-0 truncate">
             Hasil Segmentasi
           </h1>
           {isVideo && (
-            <span className="bg-purple-50 text-purple-600 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-purple-200">
+            <span className="bg-purple-50 text-purple-600 text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full font-semibold border border-purple-200 shrink-0">
               Video Mode
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
           {hasAdviceOrSuggestions && (
             <Button
               icon={<ThunderboltFilled className="text-amber-400" />}
               onClick={() => setIsBottomSheetOpen(true)}
-              className="bg-[#00bcd4] text-white hover:bg-[#00acc1] border-none rounded-xl font-semibold shadow-xs flex items-center"
+              className="bg-[#00bcd4] text-white hover:bg-[#00acc1] border-none rounded-xl font-semibold shadow-xs flex items-center text-xs sm:text-sm"
             >
               Rekomendasi AI
             </Button>
@@ -680,7 +680,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
               href={downloadUrl}
               target="_blank"
               download
-              className="rounded-xl"
+              className="rounded-xl text-xs sm:text-sm"
             >
               Download
             </Button>
@@ -699,18 +699,19 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
               }
             }}
             className="rounded-xl"
+            aria-label="Bagikan"
           />
         </div>
       </div>
 
       {/* MAIN VIEW */}
-      <div className="space-y-6">
+      <div className="space-y-6 min-w-0">
         {/* Top Section: 2 Columns on Desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start min-w-0">
           {/* Left Column: Media Information & AI Overlay */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             {/* Card 1: Project & File Details + Original Media Preview */}
-            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-5 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-5 overflow-hidden min-w-0">
               {hasProjectOrFileInfo && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm text-gray-600">
                   {projectName && (
@@ -788,8 +789,8 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
             </div>
 
             {/* Card 2: Segmentasi AI (Foto Overlay AI) */}
-            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-5">
-              <div className="flex justify-between items-center mb-3">
+            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-5 min-w-0">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                 <div>
                   <h3 className="text-base font-bold text-gray-800 m-0">
                     Segmentasi AI
@@ -797,7 +798,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <p className="text-xs text-gray-400 m-0">Foto Overlay AI</p>
                 </div>
                 {modelName && (
-                  <span className="text-xs bg-[#00bcd4]/10 text-[#00bcd4] font-semibold px-2.5 py-1 rounded-full">
+                  <span className="text-xs bg-[#00bcd4]/10 text-[#00bcd4] font-semibold px-2.5 py-1 rounded-full shrink-0">
                     {modelName}
                   </span>
                 )}
@@ -845,13 +846,13 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
               {/* Color Legend: Only render legend items with non-null values */}
               {legendItems.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
                   {legendItems.map((item) => (
                     <div
                       key={item.label}
-                      className="flex flex-col items-center p-2 rounded-xl bg-gray-50/70 border border-gray-100"
+                      className="flex flex-col items-center p-2 rounded-xl bg-gray-50/70 border border-gray-100 min-w-0"
                     >
-                      <div className="flex items-center gap-1.5 mb-1">
+                      <div className="flex items-center gap-1.5 mb-1 max-w-full">
                         <span
                           className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: item.color }}
@@ -871,17 +872,17 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
           </div>
 
           {/* Right Column: Index, Skor Prediksi, & Visual Indicators */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             {/* Card 3: Urban Visual Index */}
-            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-6 min-w-0">
               <h3 className="text-base font-bold text-gray-800 mb-4">
                 Urban Visual Index
               </h3>
 
-              <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6">
                 {/* Circular Score Gauge (rendered if uviScore is available) */}
                 {displayUviNumber != null ? (
-                  <div className="relative shrink-0 flex items-center justify-center w-32 h-32">
+                  <div className="relative shrink-0 flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32">
                     <svg
                       className="w-full h-full transform -rotate-90"
                       viewBox="0 0 120 120"
@@ -909,10 +910,10 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl font-black text-[#00bcd4]">
+                      <span className="text-2xl sm:text-3xl font-black text-[#00bcd4]">
                         {displayUviNumber}
                       </span>
-                      <span className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
+                      <span className="text-[10px] sm:text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
                         Skor Indeks
                       </span>
                     </div>
@@ -920,7 +921,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                 ) : null}
 
                 {/* Rating Badge & AI Suggestion Paragraph */}
-                <div className="flex-1 space-y-2 text-center sm:text-left">
+                <div className="flex-1 space-y-2 text-center sm:text-left min-w-0">
                   {uviBadge && (
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border border-cyan-200 bg-cyan-50 text-cyan-700">
                       <StarFilled className="text-cyan-500" />
@@ -943,9 +944,9 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
                     Informasi Lokasi
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs text-gray-600">
                     {locationName && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         <EnvironmentOutlined className="text-[#00bcd4] text-sm shrink-0" />
                         <span className="truncate" title={locationName}>
                           {locationName}
@@ -953,13 +954,13 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                       </div>
                     )}
                     {formattedDate && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         <CalendarOutlined className="text-[#00bcd4] text-sm shrink-0" />
                         <span className="truncate">{formattedDate}</span>
                       </div>
                     )}
                     {coordinatesText && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         <CompassOutlined className="text-[#00bcd4] text-sm shrink-0" />
                         <span className="truncate">{coordinatesText}</span>
                       </div>
@@ -971,7 +972,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
             {/* Card 4: Skor Prediksi (Beauty, Safety, Comfort) - Only if at least one score exists */}
             {hasPredictionScores && (
-              <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
+              <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-6 min-w-0">
                 <h3 className="text-base font-bold text-gray-800 mb-4">
                   Skor Prediksi
                 </h3>
@@ -1029,7 +1030,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
             {/* Card 5: Visual Environment Indicators - Only render if indicators exist */}
             {envIndicators.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
+              <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-6 min-w-0">
                 <h3 className="text-base font-bold text-gray-800 mb-4">
                   Visual Environment Indicators
                 </h3>
@@ -1037,17 +1038,17 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   {envIndicators.map((ind) => (
                     <div
                       key={ind.title}
-                      className="flex items-center justify-between p-3 rounded-xl bg-gray-50/70 border border-gray-100 hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gray-50/70 border border-gray-100 hover:bg-gray-50 transition-colors gap-2 min-w-0"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                         <div className="w-9 h-9 rounded-xl bg-white shadow-xs flex items-center justify-center shrink-0 border border-gray-100">
                           {ind.icon}
                         </div>
-                        <div>
-                          <h4 className="text-xs sm:text-sm font-bold text-gray-800 m-0">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-xs sm:text-sm font-bold text-gray-800 m-0 truncate">
                             {ind.title}
                           </h4>
-                          <p className="text-[11px] text-gray-400 m-0">
+                          <p className="text-[11px] text-gray-400 m-0 truncate">
                             {ind.subtitle}
                           </p>
                         </div>
@@ -1076,7 +1077,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
         {/* Bottom Section: Faktor Pengaruh UVI / PVI - Only render if factors exist */}
         {hasUviFactors && (
-          <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
+          <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-6 min-w-0">
             <div className="mb-4">
               <h3 className="text-base sm:text-lg font-bold text-gray-800 m-0">
                 Faktor Pengaruh UVI
@@ -1087,10 +1088,10 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 min-w-0">
               {/* Faktor Positif */}
               {positiveFactors.length > 0 && (
-                <div className="rounded-2xl border border-cyan-100 overflow-hidden bg-cyan-50/20">
+                <div className="rounded-2xl border border-cyan-100 overflow-hidden bg-cyan-50/20 min-w-0">
                   <div className="bg-[#00bcd4] text-white px-4 py-2.5 font-bold text-xs sm:text-sm flex items-center gap-2">
                     <CheckCircleFilled className="text-white" />
                     <span>Faktor Positif</span>
@@ -1099,10 +1100,10 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                     {positiveFactors.map((factor) => (
                       <div key={factor.label}>
                         <div className="flex justify-between text-xs font-semibold text-gray-700 mb-1">
-                          <span className="flex items-center gap-1.5">
+                          <span className="flex items-center gap-1.5 truncate mr-2">
                             <span>{factor.icon}</span> {factor.label}
                           </span>
-                          <span className="text-[#00bcd4] font-bold">
+                          <span className="text-[#00bcd4] font-bold shrink-0">
                             {factor.val.toFixed(1)}%
                           </span>
                         </div>
@@ -1120,7 +1121,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
               {/* Faktor Negatif */}
               {negativeFactors.length > 0 && (
-                <div className="rounded-2xl border border-red-100 overflow-hidden bg-rose-50/20">
+                <div className="rounded-2xl border border-red-100 overflow-hidden bg-rose-50/20 min-w-0">
                   <div className="bg-[#ef4444] text-white px-4 py-2.5 font-bold text-xs sm:text-sm flex items-center gap-2">
                     <span className="text-white">✕</span>
                     <span>Faktor Negatif</span>
@@ -1129,10 +1130,10 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                     {negativeFactors.map((factor) => (
                       <div key={factor.label}>
                         <div className="flex justify-between text-xs font-semibold text-gray-700 mb-1">
-                          <span className="flex items-center gap-1.5">
+                          <span className="flex items-center gap-1.5 truncate mr-2">
                             {factor.icon} {factor.label}
                           </span>
-                          <span className="text-red-500 font-bold">
+                          <span className="text-red-500 font-bold shrink-0">
                             {factor.val.toFixed(1)}%
                           </span>
                         </div>
@@ -1153,18 +1154,18 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
         {/* Section Rekomendasi AI (Photo Only, matching Image 1) */}
         {hasAdviceOrSuggestions && (
-          <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-2">
-                <ThunderboltFilled className="text-cyan-500 text-lg" />
-                <h3 className="text-base sm:text-lg font-bold text-gray-800 m-0">
+          <div className="bg-white rounded-2xl shadow-xs border border-gray-100 p-4 sm:p-6 min-w-0 overflow-hidden">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <ThunderboltFilled className="text-cyan-500 text-lg shrink-0" />
+                <h3 className="text-base sm:text-lg font-bold text-gray-800 m-0 truncate">
                   Rekomendasi AI
                 </h3>
               </div>
               <Button
                 type="primary"
                 onClick={() => setIsBottomSheetOpen(true)}
-                className="bg-[#00bcd4] hover:bg-[#00acc1] border-none rounded-xl font-semibold shadow-xs"
+                className="w-full sm:w-auto bg-[#00bcd4] hover:bg-[#00acc1] border-none rounded-xl font-semibold shadow-xs text-xs sm:text-sm h-auto min-h-9 py-2 px-4 whitespace-normal text-center"
               >
                 Buka Analisis & Perbandingan
               </Button>
@@ -1172,9 +1173,9 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
             {/* Suggestion Bubble */}
             {aiSuggestionText && (
-              <div className="bg-cyan-50/50 border border-cyan-100 rounded-2xl p-4 mb-4 flex items-start gap-3">
+              <div className="bg-cyan-50/50 border border-cyan-100 rounded-2xl p-4 mb-4 flex items-start gap-3 min-w-0">
                 <ThunderboltFilled className="text-[#00bcd4] text-lg shrink-0 mt-0.5" />
-                <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed m-0">
+                <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed m-0 break-words flex-1">
                   {aiSuggestionText}
                 </p>
               </div>
@@ -1182,7 +1183,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
             {/* Visualisasi prediktif berbasis AI with generated_image_url */}
             {generatedImageUrl && (
-              <div className="space-y-3">
+              <div className="space-y-3 min-w-0">
                 <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Visualisasi prediktif berbasis AI
                 </div>
@@ -1205,9 +1206,9 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                 </div>
 
                 {/* Disclaimer banner */}
-                <div className="bg-sky-50 border border-sky-100 rounded-xl p-3 text-xs text-sky-800 flex items-start gap-2">
+                <div className="bg-sky-50 border border-sky-100 rounded-xl p-3 text-xs text-sky-800 flex items-start gap-2 min-w-0">
                   <InfoCircleOutlined className="text-sky-500 shrink-0 mt-0.5" />
-                  <span>
+                  <span className="break-words">
                     Gambar ini menunjukkan rekomendasi berbasis AI tentang
                     potensi peningkatan kawasan perkotaan berdasarkan
                     optimalisasi UVI, bukan representasi mutlak / prediksi yang
@@ -1218,7 +1219,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                 <div className="pt-2 flex justify-center">
                   <Button
                     onClick={() => setIsBottomSheetOpen(true)}
-                    className="w-full sm:w-auto px-8 py-2.5 h-auto text-sm font-semibold rounded-xl bg-[#00bcd4] text-white hover:bg-[#00acc1] border-none shadow-xs"
+                    className="w-full sm:w-auto px-4 sm:px-8 py-2.5 h-auto text-xs sm:text-sm font-semibold rounded-xl bg-[#00bcd4] text-white hover:bg-[#00acc1] border-none shadow-xs text-center whitespace-normal leading-snug"
                   >
                     Lihat Rekomendasi AI & Perbandingan
                   </Button>
@@ -1234,9 +1235,9 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
             <Button
               type="primary"
               size="large"
-              icon={<ThunderboltFilled className="text-amber-300" />}
+              icon={<ThunderboltFilled className="text-amber-300 shrink-0" />}
               onClick={() => setIsBottomSheetOpen(true)}
-              className="flex-1 h-12 rounded-xl bg-gray-900 hover:bg-gray-800 text-white border-none font-bold text-sm shadow-xs"
+              className="flex-1 h-auto min-h-11 sm:h-12 py-2.5 px-3 sm:px-4 rounded-xl bg-gray-900 hover:bg-gray-800 text-white border-none font-bold text-xs sm:text-sm shadow-xs whitespace-normal text-center leading-snug flex items-center justify-center gap-1.5"
             >
               Lihat Rekomendasi & Perbandingan
             </Button>
@@ -1245,14 +1246,14 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
             type="primary"
             size="large"
             onClick={() => window.print()}
-            className="flex-1 h-12 rounded-xl bg-[#00bcd4] hover:bg-[#00acc1] border-none font-bold text-sm shadow-xs"
+            className="flex-1 h-auto min-h-11 sm:h-12 py-2.5 px-3 sm:px-4 rounded-xl bg-[#00bcd4] hover:bg-[#00acc1] border-none font-bold text-xs sm:text-sm shadow-xs whitespace-normal text-center leading-snug flex items-center justify-center"
           >
             Unduh Laporan
           </Button>
           <Button
             size="large"
             onClick={handleGoHome}
-            className="flex-1 h-12 rounded-xl border border-gray-200 text-gray-700 hover:text-gray-900 font-bold text-sm"
+            className="flex-1 h-auto min-h-11 sm:h-12 py-2.5 px-3 sm:px-4 rounded-xl border border-gray-200 text-gray-700 hover:text-gray-900 font-bold text-xs sm:text-sm whitespace-normal text-center leading-snug flex items-center justify-center"
           >
             Kembali ke Beranda
           </Button>
@@ -1285,7 +1286,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
           },
         }}
       >
-        <div className="max-w-3xl mx-auto px-4 sm:px-8 py-3 pb-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 py-3 pb-[max(48px,calc(env(safe-area-inset-bottom)+24px))]">
           {/* Handle Bar (Drag Indicator) */}
           <div className="flex justify-center pt-1 pb-3">
             <div

@@ -142,13 +142,13 @@ export default function ProjectsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-5">
-        <h1 className="text-lg font-bold text-gray-800">Projects Management</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+        <h1 className="text-lg sm:text-xl font-bold text-gray-800 m-0">Projects Management</h1>
         <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={handleAdd}
-          className="rounded-lg shadow-lg shadow-blue-500/30"
+          className="w-full sm:w-auto rounded-lg shadow-md shadow-blue-500/20"
           style={{
             background: "linear-gradient(135deg, #3b82f6, #2563eb)",
             border: "none",
@@ -167,11 +167,12 @@ export default function ProjectsPage() {
           dataSource={paginatedData?.data || []}
           rowKey="id"
           loading={loading}
-          scroll={{ x: 750 }}
+          scroll={{ x: 700 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,
             total: paginatedData?.total_data || 0,
+            className: "px-4 py-2",
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);
@@ -188,6 +189,7 @@ export default function ProjectsPage() {
         okText={editingProject ? "Save Changes" : "Create"}
         cancelText="Cancel"
         destroyOnClose
+        className="max-w-[calc(100vw-32px)]"
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item

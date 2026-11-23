@@ -484,7 +484,7 @@ export default function VisualAnalysisPage() {
 
                   {/* Color Legend (Identical to SegmentationResultView) */}
                   {legendItems.length > 0 && (
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
                       {legendItems.map((item) => (
                         <div
                           key={item.label}
@@ -559,7 +559,7 @@ export default function VisualAnalysisPage() {
 
                   {/* Color Legend */}
                   {legendItems.length > 0 && (
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
                       {legendItems.map((item) => (
                         <div
                           key={item.label}

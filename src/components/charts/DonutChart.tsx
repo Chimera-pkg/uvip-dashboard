@@ -3,9 +3,9 @@ import { datasetSummary, datasetTotal } from "../../data/datasetSummary";
 
 export default function DonutChart() {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4">
       {/* Chart */}
-      <div className="relative w-[140px] h-[140px] flex-shrink-0">
+      <div className="relative w-[130px] h-[130px] sm:w-[140px] sm:h-[140px] flex-shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie

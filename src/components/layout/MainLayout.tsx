@@ -54,11 +54,17 @@ export default function MainLayout() {
             },
             header: { display: "none" },
           }}
-          width={260}
+          width={
+            typeof window !== "undefined"
+              ? Math.min(270, Math.floor(window.innerWidth * 0.82))
+              : 270
+          }
           closable={false}
         >
           <Sidebar
             collapsed={false}
+            isMobileDrawer={true}
+            onClose={() => setMobileDrawerOpen(false)}
             onItemClick={() => setMobileDrawerOpen(false)}
           />
         </Drawer>
@@ -108,7 +114,7 @@ export default function MainLayout() {
           />
         </Header>
 
-        <Content className="p-3 sm:p-5 bg-[#f0f2f5] min-w-0 flex-1">
+        <Content className="p-3 sm:p-5 md:p-6 bg-[#f0f2f5] min-w-0 flex-1 safe-bottom overflow-x-hidden">
           <Outlet />
         </Content>
 

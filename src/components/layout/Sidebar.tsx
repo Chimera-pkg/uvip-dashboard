@@ -1,5 +1,5 @@
-import { Menu, Avatar } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
+import { Menu, Avatar, Button } from "antd";
+import { LogoutOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
@@ -10,6 +10,8 @@ import uvipLogoSmall from "../../assets/urbanlens_logo_small.png";
 interface SidebarProps {
   collapsed: boolean;
   onItemClick?: () => void;
+  onClose?: () => void;
+  isMobileDrawer?: boolean;
 }
 
 /**
@@ -47,7 +49,12 @@ const menuKeyToPath: Record<string, string> = {
   "system-monitoring": "/system-monitoring",
 };
 
-export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
+export default function Sidebar({
+  collapsed,
+  onItemClick,
+  onClose,
+  isMobileDrawer = false,
+}: SidebarProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,20 +63,42 @@ export default function Sidebar({ collapsed, onItemClick }: SidebarProps) {
   const activeKey = location.pathname.split("/")[1] || "dashboard";
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full select-none">
       {/* Logo Section */}
-      <div
-        className="flex items-center gap-3 px-5 py-5 border-b border-white/10 cursor-pointer"
-        onClick={() => {
-          navigate("/dashboard");
-          onItemClick?.();
-        }}
-      >
-        <img
-          src={collapsed ? uvipLogoSmall : uvipLogo}
-          alt="UVIP Logo"
-          className={collapsed ? "h-14 w-auto" : "h-24 w-auto"}
-        />
+      <div className="flex items-center justify-between px-4 sm:px-5 py-4 border-b border-white/10">
+        <div
+          className="flex items-center gap-3 cursor-pointer overflow-hidden"
+          onClick={() => {
+            navigate("/dashboard");
+            onItemClick?.();
+          }}
+        >
+          <img
+            src={collapsed ? uvipLogoSmall : uvipLogo}
+            alt="UVIP Logo"
+            className={
+              collapsed
+                ? "h-10 w-auto"
+                : isMobileDrawer
+                  ? "h-12 sm:h-14 w-auto object-contain"
+                  : "h-14 sm:h-16 w-auto object-contain"
+            }
+          />
+        </div>
+
+        {/* Close Button on Mobile Drawer */}
+        {isMobileDrawer && (
+          <Button
+            type="text"
+            icon={<CloseOutlined className="text-gray-300 text-base" />}
+            onClick={() => {
+              if (onClose) onClose();
+              else onItemClick?.();
+            }}
+            className="flex items-center justify-center h-8 w-8 rounded-lg hover:bg-white/10 text-gray-300"
+            aria-label="Tutup menu"
+          />
+        )}
       </div>
 
       {/* Menu */}

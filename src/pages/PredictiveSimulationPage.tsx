@@ -42,7 +42,7 @@ export default function PredictiveSimulationPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
         {kpiData.map((kpi) => (
           <KpiCard key={kpi.key} kpi={kpi} />
         ))}
@@ -210,48 +210,50 @@ export default function PredictiveSimulationPage() {
                     </a>
                   }
                 >
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-left text-xs text-gray-400 border-b border-gray-100">
-                        <th className="py-2 font-medium">Metric</th>
-                        <th className="py-2 font-medium text-right">Before</th>
-                        <th className="py-2 font-medium text-right">After</th>
-                        <th className="py-2 font-medium text-right">Change</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {result.rows.map((r) => (
-                        <tr
-                          key={r.key}
-                          className="border-b border-gray-50 last:border-0"
-                        >
-                          <td className="py-2.5 font-medium text-gray-700">
-                            {r.metric}
-                          </td>
-                          <td className="py-2.5 text-right text-gray-400">
-                            {r.before}
-                            {r.isPercent ? "%" : ""}
-                          </td>
-                          <td className="py-2.5 text-right font-semibold text-gray-800">
-                            {r.after}
-                            {r.isPercent ? "%" : ""}
-                          </td>
-                          <td className="py-2.5 text-right">
-                            <Tag
-                              color={
-                                r.changeType === "positive"
-                                  ? "success"
-                                  : "error"
-                              }
-                              className="text-xs font-bold border-none"
-                            >
-                              {r.changeLabel}
-                            </Tag>
-                          </td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm min-w-[280px]">
+                      <thead>
+                        <tr className="text-left text-xs text-gray-400 border-b border-gray-100">
+                          <th className="py-2 font-medium">Metric</th>
+                          <th className="py-2 font-medium text-right">Before</th>
+                          <th className="py-2 font-medium text-right">After</th>
+                          <th className="py-2 font-medium text-right">Change</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {result.rows.map((r) => (
+                          <tr
+                            key={r.key}
+                            className="border-b border-gray-50 last:border-0"
+                          >
+                            <td className="py-2.5 font-medium text-gray-700">
+                              {r.metric}
+                            </td>
+                            <td className="py-2.5 text-right text-gray-400">
+                              {r.before}
+                              {r.isPercent ? "%" : ""}
+                            </td>
+                            <td className="py-2.5 text-right font-semibold text-gray-800">
+                              {r.after}
+                              {r.isPercent ? "%" : ""}
+                            </td>
+                            <td className="py-2.5 text-right">
+                              <Tag
+                                color={
+                                  r.changeType === "positive"
+                                    ? "success"
+                                    : "error"
+                                }
+                                className="text-xs font-bold border-none"
+                              >
+                                {r.changeLabel}
+                              </Tag>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </Card>
               </Col>
 
@@ -287,19 +289,19 @@ export default function PredictiveSimulationPage() {
                         {recommendationText}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
                       <Button
                         type="primary"
                         icon={<PlayCircleOutlined />}
                         size="small"
-                        className="bg-blue-500 hover:bg-blue-600 border-none"
+                        className="bg-blue-500 hover:bg-blue-600 border-none flex-1 sm:flex-none"
                       >
                         Apply Scenario
                       </Button>
                       <Button
                         size="small"
                         icon={<CheckCircleFilled />}
-                        className="border-gray-200 text-gray-600"
+                        className="border-gray-200 text-gray-600 flex-1 sm:flex-none"
                       >
                         Save as Baseline
                       </Button>

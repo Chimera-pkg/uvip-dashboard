@@ -29,7 +29,7 @@ export default function ProjectTeamPage() {
           return (
             <div
               key={member.id}
-              className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6"
+              className="bg-white rounded-2xl p-4 sm:p-6 md:p-7 border border-gray-100 shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6"
             >
               {/* Photo Box */}
               <div className="w-32 h-44 sm:w-36 sm:h-48 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-gray-100 shadow-xs relative flex items-center justify-center">

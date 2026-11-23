@@ -84,15 +84,15 @@ function RecentProjectsCard() {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-800 truncate group-hover:text-blue-600 transition-colors">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="text-xs sm:text-sm font-semibold text-gray-800 truncate group-hover:text-blue-600 transition-colors">
                     {p.name}
                   </span>
-                  <span className={getUviBadgeClass(p.uvi_score)}>
+                  <span className={`${getUviBadgeClass(p.uvi_score)} shrink-0 text-[10px] sm:text-xs`}>
                     UVI {p.uvi_score?.toFixed(2)}
                   </span>
                 </div>
-                <div className="text-xs text-gray-400 mt-0.5 truncate">
+                <div className="text-[11px] sm:text-xs text-gray-400 mt-0.5 truncate">
                   {p.location || "Tanpa lokasi"}
                 </div>
               </div>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
         {kpis.map((kpi) => (
           <KpiCard key={kpi.key} kpi={kpi} />
         ))}

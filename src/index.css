@@ -15,11 +15,18 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   body {
     background-color: #f0f2f5;
     color: #1f2937;
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    -webkit-tap-highlight-color: transparent;
   }
 
   ::-webkit-scrollbar {
@@ -166,5 +173,68 @@
       transform: scale(2);
       opacity: 0;
     }
+  }
+
+  /* Responsive Ant Design Overrides */
+  .ant-modal {
+    max-width: calc(100vw - 24px) !important;
+    margin: 16px auto !important;
+  }
+
+  .ant-modal .ant-modal-content {
+    border-radius: 16px !important;
+    padding: 20px !important;
+  }
+
+  @media (max-width: 640px) {
+    .ant-modal .ant-modal-content {
+      padding: 16px !important;
+    }
+
+    .ant-pagination {
+      font-size: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .ant-pagination-item,
+    .ant-pagination-prev,
+    .ant-pagination-next,
+    .ant-pagination-jump-prev,
+    .ant-pagination-jump-next {
+      min-width: 28px !important;
+      height: 28px !important;
+      line-height: 26px !important;
+      margin-inline-end: 4px !important;
+    }
+  }
+
+  .ant-table-wrapper {
+    max-width: 100%;
+  }
+
+  .ant-table-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ant-drawer-content-wrapper {
+    max-width: 100vw !important;
+  }
+
+  .ant-popover-inner,
+  .ant-tooltip-inner {
+    max-width: 88vw;
+  }
+
+  .leaflet-container {
+    touch-action: pan-x pan-y;
+    font-family: inherit;
+  }
+
+  /* Mobile safe area padding utility */
+  .safe-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
 }

@@ -223,7 +223,7 @@ export default function CorridorComparisonPage() {
     );
 
     return (
-      <div className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between min-h-110">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-7 border border-gray-100 shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between min-h-110">
         {loading ? (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
@@ -361,9 +361,9 @@ export default function CorridorComparisonPage() {
       </div>
 
       {/* Corridor Selectors Bar */}
-      <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm">
         {/* Koridor Pertama */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 flex-1 sm:flex-initial">
           <span className="font-semibold text-slate-700 shrink-0">
             Koridor pertama
           </span>
@@ -374,7 +374,7 @@ export default function CorridorComparisonPage() {
             loading={loadingPhotos}
             showSearch
             optionFilterProp="label"
-            className="w-48 sm:w-56"
+            className="w-full sm:w-56"
             options={photos.map((p) => ({
               value: p.id,
               label: p.original_filename,
@@ -383,10 +383,10 @@ export default function CorridorComparisonPage() {
         </div>
 
         {/* Separator */}
-        <span className="text-slate-400 font-medium hidden sm:inline">vs.</span>
+        <span className="text-slate-400 font-medium text-center hidden sm:inline">vs.</span>
 
         {/* Koridor Kedua */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 flex-1 sm:flex-initial">
           <span className="font-semibold text-slate-700 shrink-0">
             Koridor kedua
           </span>
@@ -397,7 +397,7 @@ export default function CorridorComparisonPage() {
             loading={loadingPhotos}
             showSearch
             optionFilterProp="label"
-            className="w-48 sm:w-56"
+            className="w-full sm:w-56"
             options={photos.map((p) => ({
               value: p.id,
               label: p.original_filename,

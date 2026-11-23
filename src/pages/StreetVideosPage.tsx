@@ -119,10 +119,10 @@ export default function StreetVideosPage() {
             galeri ponsel.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <Select
             placeholder="Silahkan Pilih Projek"
-            className="w-full sm:w-50"
+            className="w-full sm:w-56"
             loading={loadingProjects}
             onChange={handleProjectChange}
             options={projects.map((p) => ({ label: p.name, value: p.id }))}
@@ -243,13 +243,14 @@ export default function StreetVideosPage() {
           </div>
 
           {data?.data && data.data.length > 0 && (
-            <div className="flex justify-end mt-4 mb-8">
+            <div className="flex justify-center sm:justify-end mt-4 mb-8 overflow-x-auto max-w-full py-1">
               <Pagination
                 current={currentPage}
                 pageSize={pageSize}
                 total={data?.total_data || 0}
                 onChange={handlePageChange}
                 showSizeChanger
+                responsive
               />
             </div>
           )}
@@ -273,6 +274,7 @@ export default function StreetVideosPage() {
         footer={null}
         width={800}
         destroyOnClose
+        className="max-w-[calc(100vw-24px)]"
       >
         {previewVideoUrl && (
           <video

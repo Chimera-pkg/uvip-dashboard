@@ -288,12 +288,12 @@ export default function UserProfilePage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             type="primary"
             icon={<EditOutlined />}
             onClick={() => setIsEditProfileModalOpen(true)}
-            className="rounded-lg font-medium shadow-xs"
+            className="rounded-lg font-medium shadow-xs text-xs sm:text-sm px-2.5 sm:px-3.5 h-8 sm:h-9"
           >
             Edit Profil
           </Button>
@@ -301,7 +301,7 @@ export default function UserProfilePage() {
           <Button
             icon={<LockOutlined />}
             onClick={() => setIsChangePasswordModalOpen(true)}
-            className="rounded-lg text-slate-700 font-medium"
+            className="rounded-lg text-slate-700 font-medium text-xs sm:text-sm px-2.5 sm:px-3.5 h-8 sm:h-9"
           >
             Ubah Sandi
           </Button>
@@ -310,7 +310,7 @@ export default function UserProfilePage() {
             icon={<ReloadOutlined spin={loading} />}
             onClick={() => fetchProfile()}
             disabled={loading}
-            className="rounded-lg text-slate-700 font-medium"
+            className="rounded-lg text-slate-700 font-medium text-xs sm:text-sm px-2.5 sm:px-3.5 h-8 sm:h-9"
           >
             Segarkan
           </Button>
@@ -319,7 +319,7 @@ export default function UserProfilePage() {
             danger
             icon={<LogoutOutlined />}
             onClick={() => logout()}
-            className="rounded-lg font-medium"
+            className="rounded-lg font-medium text-xs sm:text-sm px-2.5 sm:px-3.5 h-8 sm:h-9"
           >
             Keluar
           </Button>
@@ -343,15 +343,15 @@ export default function UserProfilePage() {
             </div>
 
             {/* Profile Bar */}
-            <div className="px-6 sm:px-8 pb-6 relative">
-              <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-16 sm:-mt-18 mb-4">
+            <div className="px-4 sm:px-8 pb-6 relative">
+              <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-14 sm:-mt-18 mb-4">
                 {/* Avatar with Camera upload overlay */}
                 <div className="relative group">
                   <div
                     onClick={() =>
                       !uploadingAvatar && fileInputRef.current?.click()
                     }
-                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border-4 border-white shadow-md overflow-hidden bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white cursor-pointer relative"
+                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-white shadow-md overflow-hidden bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white cursor-pointer relative"
                     title="Klik untuk ubah foto profil"
                   >
                     {uploadingAvatar ? (

@@ -57,19 +57,19 @@ export default function LoginPage() {
       />
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-[420px] mx-4">
+      <div className="relative z-10 w-full max-w-[420px] mx-3 sm:mx-4 px-1">
         {/* Logo & Branding */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
-            <img src={uvipLogo} alt="UVIP" className="h-12" />
+            <img src={uvipLogo} alt="UVIP" className="h-10 sm:h-12" />
           </div>
-          <p className="text-blue-200/60 text-sm">
+          <p className="text-blue-200/60 text-xs sm:text-sm">
             Urban Visual Intelligence Platform
           </p>
         </div>
 
         {/* Card */}
-        <div className="login-card rounded-2xl p-8 shadow-2xl shadow-black/30">
+        <div className="login-card rounded-2xl p-5 sm:p-8 shadow-2xl shadow-black/30">
           <div className="mb-6">
             <h1 className="text-xl font-bold text-gray-800">Selamat Datang</h1>
             <p className="text-gray-400 text-sm mt-1">

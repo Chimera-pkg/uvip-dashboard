@@ -718,23 +718,23 @@ export default function MapView({
         >
           <button
             type="button"
-            className="bg-white/90 hover:bg-white backdrop-blur-sm px-2.5 py-1 rounded-md shadow-sm border border-gray-200/80 text-[11px] text-gray-700 font-medium flex items-center gap-1.5 cursor-pointer transition-colors"
+            className="bg-white/90 hover:bg-white backdrop-blur-sm px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md shadow-sm border border-gray-200/80 text-[10px] sm:text-[11px] text-gray-700 font-medium flex items-center gap-1.5 cursor-pointer transition-colors"
           >
             <div className="flex items-center -space-x-1">
               <span
-                className="w-2 h-2 rounded-full border border-white"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-white"
                 style={{ backgroundColor: "#C62828" }}
               />
               <span
-                className="w-2 h-2 rounded-full border border-white"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-white"
                 style={{ backgroundColor: "#FFA000" }}
               />
               <span
-                className="w-2 h-2 rounded-full border border-white"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-white"
                 style={{ backgroundColor: "#4CAF50" }}
               />
               <span
-                className="w-2 h-2 rounded-full border border-white"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-white"
                 style={{ backgroundColor: "#02BDDB" }}
               />
             </div>
@@ -745,15 +745,15 @@ export default function MapView({
 
       {/* Location count badge on map */}
       {allValidLocations.length > 0 && (
-        <div className="absolute bottom-3 right-3 z-[1000] bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-md shadow-sm border border-gray-200/80 text-[11px] text-gray-700 font-medium flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+        <div className="absolute bottom-3 right-3 z-[1000] bg-white/90 backdrop-blur-sm px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md shadow-sm border border-gray-200/80 text-[10px] sm:text-[11px] text-gray-700 font-medium flex items-center gap-1 sm:gap-1.5">
+          <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-600 animate-pulse"></span>
           <span>{allValidLocations.length} Titik Lokasi</span>
         </div>
       )}
 
       {/* Project filter overlay (top-right) */}
       {projects && projects.length > 0 && (
-        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-2.5 py-1.5 border border-gray-200/80 flex items-center gap-1.5">
+        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-2 py-1 sm:px-2.5 sm:py-1.5 border border-gray-200/80 flex items-center gap-1 sm:gap-1.5 max-w-[170px] sm:max-w-none">
           <FolderOutlined className="text-blue-500 text-xs flex-shrink-0" />
           <Select
             size="small"
@@ -766,7 +766,7 @@ export default function MapView({
               ...projects.map((p) => ({ label: p.name, value: p.id })),
             ]}
             loading={loadingProjects}
-            className="w-40 text-xs"
+            className="w-28 sm:w-40 text-xs"
             popupMatchSelectWidth={false}
           />
         </div>

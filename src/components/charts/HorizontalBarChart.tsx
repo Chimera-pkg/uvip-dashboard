@@ -58,12 +58,12 @@ export default function HorizontalBarChart() {
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="flex items-center justify-between mt-2 px-2">
-        <div className="flex items-center gap-2 text-xs text-gray-400">
+      <div className="flex flex-wrap items-center justify-between gap-1 mt-2 px-2 text-[11px] sm:text-xs">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-gray-400">
           <span className="w-4 h-0.5 bg-red-400 inline-block border-dashed" />
           Target R² {">"} {targetR2.toFixed(2)}
         </div>
-        <span className="text-xs text-gray-400">
+        <span className="text-gray-400">
           Last Training: {lastTraining}
         </span>
       </div>

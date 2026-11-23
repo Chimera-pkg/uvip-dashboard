@@ -184,8 +184,8 @@ export default function UviHeatmapPage() {
       {/* Main Map Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Controls Bar */}
-        <div className="p-4 sm:px-5 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100">
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+        <div className="p-3 sm:p-4 md:px-5 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 md:gap-6 w-full sm:w-auto">
             {/* Heatmap UVI Checkbox */}
             <Checkbox
               checked={showHeatmap}
@@ -209,7 +209,7 @@ export default function UviHeatmapPage() {
               size="middle"
               onClick={handleResetView}
               icon={<CompassOutlined className="text-slate-400" />}
-              className="rounded-lg text-xs font-medium text-slate-700 hover:text-blue-600 hover:border-blue-400"
+              className="rounded-lg text-xs font-medium text-slate-700 hover:text-blue-600 hover:border-blue-400 h-8 sm:h-9"
             >
               Tampilan awal
             </Button>
@@ -220,7 +220,7 @@ export default function UviHeatmapPage() {
               onClick={handleReload}
               loading={loadingLocations}
               icon={<ReloadOutlined className="text-slate-400" />}
-              className="rounded-lg text-xs font-medium text-slate-700 hover:text-blue-600 hover:border-blue-400"
+              className="rounded-lg text-xs font-medium text-slate-700 hover:text-blue-600 hover:border-blue-400 h-8 sm:h-9"
             >
               Muat ulang
             </Button>
@@ -228,7 +228,7 @@ export default function UviHeatmapPage() {
 
           {/* Project Selector (matching Dashboard API filter capability) */}
           {projects && projects.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <FolderOutlined className="text-slate-400 text-xs hidden sm:inline" />
               <Select
                 size="middle"
@@ -241,20 +241,20 @@ export default function UviHeatmapPage() {
                   ...projects.map((p) => ({ label: p.name, value: p.id })),
                 ]}
                 loading={loadingProjects}
-                className="w-44 text-xs"
+                className="w-full sm:w-44 text-xs"
               />
             </div>
           )}
         </div>
 
         {/* Sub-bar: Area peta saat ini */}
-        <div className="px-5 py-2.5 text-xs text-slate-500 font-medium bg-slate-50/70 border-b border-gray-100">
+        <div className="px-4 sm:px-5 py-2.5 text-xs text-slate-500 font-medium bg-slate-50/70 border-b border-gray-100">
           Area peta saat ini
         </div>
 
         {/* Map Visualization */}
         <UviHeatmapMap
-          height={560}
+          height={typeof window !== "undefined" && window.innerWidth < 640 ? 380 : 540}
           locations={photoLocations}
           loading={loadingLocations}
           showHeatmap={showHeatmap}
@@ -264,10 +264,10 @@ export default function UviHeatmapPage() {
         />
 
         {/* Color Spectrum Legend */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 px-5 py-3.5 bg-white border-t border-gray-100">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 p-4 sm:px-5 sm:py-3.5 bg-white border-t border-gray-100">
           {/* Gradient Scale */}
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <span className="text-xs font-semibold text-slate-700 whitespace-nowrap">
+          <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
+            <span className="text-[10px] sm:text-xs font-semibold text-slate-700 whitespace-nowrap">
               UVI Rendah
             </span>
 
@@ -279,7 +279,7 @@ export default function UviHeatmapPage() {
                     "linear-gradient(90deg, #ef4444 0%, #f97316 25%, #eab308 50%, #84cc16 75%, #16a34a 100%)",
                 }}
               />
-              <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+              <div className="flex justify-between text-[10px] sm:text-[11px] text-slate-400 font-mono">
                 <span>0.0</span>
                 <span>0.25</span>
                 <span>0.50</span>
@@ -288,13 +288,13 @@ export default function UviHeatmapPage() {
               </div>
             </div>
 
-            <span className="text-xs font-semibold text-slate-700 whitespace-nowrap">
+            <span className="text-[10px] sm:text-xs font-semibold text-slate-700 whitespace-nowrap">
               UVI Tinggi
             </span>
           </div>
 
           {/* Legend Description */}
-          <div className="text-[11px] text-slate-500 max-w-md md:text-right leading-relaxed">
+          <div className="text-[10px] sm:text-[11px] text-slate-500 max-w-md md:text-right leading-relaxed">
             Warna: rata-rata lokal UVI, bukan kepadatan foto. Area tanpa data
             tidak diwarnai.
           </div>
@@ -302,7 +302,7 @@ export default function UviHeatmapPage() {
       </div>
 
       {/* 3 Metric Cards Under Map */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {/* Card 1: Titik pada area peta */}
         <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-shadow">
           <div className="text-xs sm:text-sm font-medium text-slate-500 mb-2">

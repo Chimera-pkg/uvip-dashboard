@@ -209,7 +209,7 @@ export default function UviAnalysisPage() {
       </div>
 
       {/* Filter Bar: Berkas sumber */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
         <label className="text-xs sm:text-sm font-semibold text-slate-600 shrink-0">
           Berkas sumber
         </label>
@@ -220,7 +220,7 @@ export default function UviAnalysisPage() {
           loading={loadingPhotos}
           showSearch
           optionFilterProp="label"
-          className="w-64 sm:w-72"
+          className="w-full sm:w-72"
           options={photos.map((p) => ({
             value: p.id,
             label: p.original_filename,
@@ -229,7 +229,7 @@ export default function UviAnalysisPage() {
       </div>
 
       {/* Card 1: Indeks Visual Perkotaan (Full Width, UVI per lokasi removed) */}
-      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-100 shadow-xs">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 border border-gray-100 shadow-xs">
         {loadingResult ? (
           <div className="space-y-6">
             <Skeleton.Input active size="small" style={{ width: "20%" }} />
@@ -435,10 +435,12 @@ export default function UviAnalysisPage() {
             dataSource={photos}
             rowKey="id"
             loading={loadingPhotos}
+            scroll={{ x: 650 }}
             pagination={{
               pageSize: 6,
               showSizeChanger: false,
-              className: "px-5 py-3",
+              className: "px-4 sm:px-5 py-3",
+              responsive: true,
             }}
             className="w-full"
           />

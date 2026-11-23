@@ -70,10 +70,18 @@ export default function App() {
           path="/street-photos/segmentation-result/:photoId"
           element={<SegmentationResultPage type="photo" />}
         />
+        <Route
+          path="/street-photos/segmentation-result"
+          element={<Navigate to="/street-photos" replace />}
+        />
         <Route path="/street-videos" element={<StreetVideosPage />} />
         <Route
           path="/street-videos/segmentation-result/:videoId"
           element={<SegmentationResultPage type="video" />}
+        />
+        <Route
+          path="/street-videos/segmentation-result"
+          element={<Navigate to="/street-videos" replace />}
         />
         <Route path="/visual-analysis" element={<VisualAnalysisPage />} />
         <Route
