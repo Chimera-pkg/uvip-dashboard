@@ -290,7 +290,8 @@ function UviHeatmapCanvasLayer({
  * Popup component for individual photo points
  */
 function PhotoPointPopup({ loc }: { loc: PositionedLocationItem }) {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_BASE_URL =
+    "https://auctions-chemicals-latitude-typing.trycloudflare.com";
   const photoUrl = loc.file_path
     ? loc.file_path.startsWith("http")
       ? loc.file_path
@@ -318,7 +319,7 @@ function PhotoPointPopup({ loc }: { loc: PositionedLocationItem }) {
           style={{ color: loc.uviInfo.color }}
         >
           <span
-            className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0"
+            className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
             style={{ backgroundColor: loc.uviInfo.color }}
           />
           <span>Street Photo</span>
@@ -329,7 +330,7 @@ function PhotoPointPopup({ loc }: { loc: PositionedLocationItem }) {
           )}
         </div>
         <span
-          className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white flex-shrink-0"
+          className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white shrink-0"
           style={{ backgroundColor: loc.uviInfo.color }}
         >
           {loc.uviInfo.category}
@@ -337,7 +338,7 @@ function PhotoPointPopup({ loc }: { loc: PositionedLocationItem }) {
       </div>
 
       <div
-        className="text-xs font-bold text-gray-800 break-words mb-2 leading-tight"
+        className="text-xs font-bold text-gray-800 wrap-break-word mb-2 leading-tight"
         title={loc.filename}
       >
         {loc.filename}
@@ -438,20 +439,20 @@ function PhotoMarkersLayer({
               }}
             >
               <Popup className="uvip-map-popup">
-                <div className="p-3 min-w-[210px]">
+                <div className="p-3 min-w-52.5">
                   <div className="flex items-center justify-between gap-2 mb-1.5">
                     <div
                       className="flex items-center gap-1.5 font-semibold text-xs truncate"
                       style={{ color: group.groupUviInfo.color }}
                     >
                       <span
-                        className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0"
+                        className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
                         style={{ backgroundColor: group.groupUviInfo.color }}
                       />
                       <span>Cluster Lokasi</span>
                     </div>
                     <span
-                      className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white flex-shrink-0"
+                      className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white shrink-0"
                       style={{ backgroundColor: group.groupUviInfo.color }}
                     >
                       {group.groupUviInfo.category}
@@ -668,7 +669,7 @@ export default function UviHeatmapMap({
       style={{ height }}
     >
       {loading && (
-        <div className="absolute inset-0 z-[1000] bg-white/60 backdrop-blur-xs flex items-center justify-center">
+        <div className="absolute inset-0 z-1000 bg-white/60 backdrop-blur-xs flex items-center justify-center">
           <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl shadow-md border border-gray-100 text-xs text-gray-700 font-medium">
             <Spin size="small" />
             <span>Memuat lokasi peta panas UVI...</span>

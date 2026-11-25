@@ -36,7 +36,8 @@ import type {
 // const CLOUDFLARE_BASE =
 //   "https://auctions-chemicals-latitude-typing.trycloudflare.com";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL =
+  "https://auctions-chemicals-latitude-typing.trycloudflare.com";
 
 export function resolveMediaUrl(
   pathOrUrl?: string | null,
@@ -1175,7 +1176,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
             {aiSuggestionText && (
               <div className="bg-cyan-50/50 border border-cyan-100 rounded-2xl p-4 mb-4 flex items-start gap-3 min-w-0">
                 <ThunderboltFilled className="text-[#00bcd4] text-lg shrink-0 mt-0.5" />
-                <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed m-0 break-words flex-1">
+                <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed m-0 wrap-break-word flex-1">
                   {aiSuggestionText}
                 </p>
               </div>
@@ -1208,7 +1209,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                 {/* Disclaimer banner */}
                 <div className="bg-sky-50 border border-sky-100 rounded-xl p-3 text-xs text-sky-800 flex items-start gap-2 min-w-0">
                   <InfoCircleOutlined className="text-sky-500 shrink-0 mt-0.5" />
-                  <span className="break-words">
+                  <span className="wrap-break-word">
                     Gambar ini menunjukkan rekomendasi berbasis AI tentang
                     potensi peningkatan kawasan perkotaan berdasarkan
                     optimalisasi UVI, bukan representasi mutlak / prediksi yang
