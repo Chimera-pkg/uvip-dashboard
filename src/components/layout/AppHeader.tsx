@@ -7,7 +7,6 @@ import {
 import { Button, Avatar } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { resolveMediaUrl } from "../SegmentationResultView";
 import uvipLogo from "../../assets/urbanlens_logo.png";
 
 interface AppHeaderProps {
@@ -23,6 +22,27 @@ export default function AppHeader({
 }: AppHeaderProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  function resolveMediaUrl(
+    pathOrUrl?: string | null,
+    fallbackBase = API_BASE_URL,
+  ): string {
+    if (!pathOrUrl) return "";
+    const trimmed = pathOrUrl.trim();
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("data:") ||
+      trimmed.startsWith("blob:")
+    ) {
+      return trimmed;
+    }
+    const cleanBase = fallbackBase.replace(/\/$/, "");
+    const cleanPath = trimmed.replace(/^\//, "");
+    return `${cleanBase}/${cleanPath}`;
+  }
 
   return (
     <div className="flex items-center justify-between w-full h-full px-3 sm:px-5 bg-white">

@@ -39,7 +39,6 @@ import {
   type UpdateProfileRequest,
   type UpdatePasswordRequest,
 } from "../api/users.service";
-import { resolveMediaUrl } from "../components/SegmentationResultView";
 
 export default function UserProfilePage() {
   const { user: authUser, logout, refreshUser } = useAuth();
@@ -254,6 +253,27 @@ export default function UserProfilePage() {
       setUpdatingPassword(false);
     }
   };
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  function resolveMediaUrl(
+    pathOrUrl?: string | null,
+    fallbackBase = API_BASE_URL,
+  ): string {
+    if (!pathOrUrl) return "";
+    const trimmed = pathOrUrl.trim();
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("data:") ||
+      trimmed.startsWith("blob:")
+    ) {
+      return trimmed;
+    }
+    const cleanBase = fallbackBase.replace(/\/$/, "");
+    const cleanPath = trimmed.replace(/^\//, "");
+    return `${cleanBase}/${cleanPath}`;
+  }
 
   const avatarUrl = user?.profile_file_path
     ? resolveMediaUrl(user.profile_file_path)

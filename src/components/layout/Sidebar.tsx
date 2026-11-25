@@ -3,7 +3,6 @@ import { LogoutOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarMenuItems } from "../../data/sidebarMenu";
 import { useAuth } from "../../context/AuthContext";
-import { resolveMediaUrl } from "../SegmentationResultView";
 import uvipLogo from "../../assets/urbanlens_dark_logo.png";
 import uvipLogoSmall from "../../assets/urbanlens_logo_small.png";
 
@@ -48,6 +47,27 @@ const menuKeyToPath: Record<string, string> = {
   settings: "/settings",
   "system-monitoring": "/system-monitoring",
 };
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+function resolveMediaUrl(
+  pathOrUrl?: string | null,
+  fallbackBase = API_BASE_URL,
+): string {
+  if (!pathOrUrl) return "";
+  const trimmed = pathOrUrl.trim();
+  if (
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("data:") ||
+    trimmed.startsWith("blob:")
+  ) {
+    return trimmed;
+  }
+  const cleanBase = fallbackBase.replace(/\/$/, "");
+  const cleanPath = trimmed.replace(/^\//, "");
+  return `${cleanBase}/${cleanPath}`;
+}
 
 export default function Sidebar({
   collapsed,
