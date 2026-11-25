@@ -13,6 +13,7 @@ import {
 } from "../api/street-photos.service";
 import { useProjects } from "../hooks/useProjects";
 import type { PositionedLocationItem } from "../components/charts/MapView";
+import { evaluateUviScore } from "../utils/uvi";
 
 export default function UviHeatmapPage() {
   const [photoLocations, setPhotoLocations] = useState<StreetPhotoLocation[]>(
@@ -69,30 +70,35 @@ export default function UviHeatmapPage() {
   );
 
   // Calculate visible metrics for the 3 cards below the map
-  const { visibleCount, maxUvi, minUvi } = useMemo(() => {
-    // If visibleLocations is empty and we are still loading, fallback to 0
-    const count = visibleLocations.length;
-    const scores = visibleLocations
-      .map((item) => item.uviScore)
-      .filter((s): s is number => s !== null && s !== undefined && !isNaN(s));
+  const { visibleCount, maxUvi, minUvi, maxUviColor, minUviColor } =
+    useMemo(() => {
+      // If visibleLocations is empty and we are still loading, fallback to 0
+      const count = visibleLocations.length;
+      const scores = visibleLocations
+        .map((item) => item.uviScore)
+        .filter((s): s is number => s !== null && s !== undefined && !isNaN(s));
 
-    if (scores.length === 0) {
+      if (scores.length === 0) {
+        return {
+          visibleCount: count,
+          maxUvi: "-",
+          minUvi: "-",
+          maxUviColor: "#94a3b8",
+          minUviColor: "#94a3b8",
+        };
+      }
+
+      const max = Math.max(...scores).toFixed(2);
+      const min = Math.min(...scores).toFixed(2);
+
       return {
         visibleCount: count,
-        maxUvi: "-",
-        minUvi: "-",
+        maxUvi: max,
+        minUvi: min,
+        maxUviColor: max !== "-" ? evaluateUviScore(max).color : "#16a34a",
+        minUviColor: min !== "-" ? evaluateUviScore(min).color : "#ef4444",
       };
-    }
-
-    const max = Math.max(...scores).toFixed(2);
-    const min = Math.min(...scores).toFixed(2);
-
-    return {
-      visibleCount: count,
-      maxUvi: max,
-      minUvi: min,
-    };
-  }, [visibleLocations]);
+    }, [visibleLocations]);
 
   // Handle Tampilan Awal
   const handleResetView = () => {
@@ -254,7 +260,9 @@ export default function UviHeatmapPage() {
 
         {/* Map Visualization */}
         <UviHeatmapMap
-          height={typeof window !== "undefined" && window.innerWidth < 640 ? 380 : 540}
+          height={
+            typeof window !== "undefined" && window.innerWidth < 640 ? 380 : 540
+          }
           locations={photoLocations}
           loading={loadingLocations}
           showHeatmap={showHeatmap}
@@ -318,7 +326,10 @@ export default function UviHeatmapPage() {
           <div className="text-xs sm:text-sm font-medium text-slate-500 mb-2">
             UVI tertinggi pada area peta
           </div>
-          <div className="text-3xl font-extrabold text-[#16a34a] tracking-tight">
+          <div
+            className="text-3xl font-extrabold tracking-tight"
+            style={{ color: maxUviColor }}
+          >
             {maxUvi}
           </div>
         </div>
@@ -328,7 +339,10 @@ export default function UviHeatmapPage() {
           <div className="text-xs sm:text-sm font-medium text-slate-500 mb-2">
             UVI terendah pada area peta
           </div>
-          <div className="text-3xl font-extrabold text-[#ef4444] tracking-tight">
+          <div
+            className="text-3xl font-extrabold tracking-tight"
+            style={{ color: minUviColor }}
+          >
             {minUvi}
           </div>
         </div>

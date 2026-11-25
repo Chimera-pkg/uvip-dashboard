@@ -12,6 +12,7 @@ import {
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useProjects } from "../hooks/useProjects";
 import type { Project, ProjectRequest } from "../api/projects.service";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 export default function ProjectsPage() {
   const {
@@ -108,9 +109,22 @@ export default function ProjectsPage() {
       title: "UVI Score",
       dataIndex: "uvi_score",
       key: "uvi_score",
-      render: (val: number) => (
-        <span className="font-bold text-blue-500">{val}</span>
-      ),
+      render: (val: number) => {
+        if (val === null || val === undefined) return "-";
+        const uviEval = evaluateUviScore(val);
+        const formatted =
+          Number(val) > 1
+            ? (Number(val) / 10).toFixed(2)
+            : Number(val).toFixed(2);
+        return (
+          <span
+            className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border"
+            style={getUviBadgeStyle(uviEval.color)}
+          >
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       title: "Action",

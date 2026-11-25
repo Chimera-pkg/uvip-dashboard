@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import { useSegmentationResult } from "../hooks/useSegmentationResult";
 import { useVideoSegmentationResult } from "../hooks/useVideoSegmentationResult";
 import { streetVideosService } from "../api/street-videos.service";
+import { evaluateUviScore, getUviBadgeStyle, hexToRgba } from "../utils/uvi";
 import type {
   LLMAdviceContent,
   LLMAdviceRecommendation,
@@ -368,6 +369,9 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
   const comfortScore: number | null = prediction?.comfort_score ?? null;
   const uviScore: number | null =
     prediction?.uvi_score ?? rawData?.uvi_score ?? null;
+  const newUviScore: number | null =
+    prediction?.llm_generate_response?.evaluation?.after?.scores?.uvi_score ??
+    null;
 
   // Media URLs:
   // 1. Original Photo URL (only for photo)
@@ -448,39 +452,30 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
   // Model name badge
   const modelName: string | null = rawData.model_name || seg.model_name || null;
 
-  // UVI score badge evaluation
-  const getUviBadge = (score: number) => {
-    if (score >= 0.75 || score >= 7.5) {
-      return {
-        text: "Sangat Tinggi",
-        color: "bg-[#00bcd4]/10 text-[#00acc1] border-[#00bcd4]/30",
-      };
-    }
-    if (score >= 0.5 || score >= 5.0) {
-      return {
-        text: "Tinggi",
-        color: "bg-emerald-50 text-emerald-600 border-emerald-200",
-      };
-    }
-    if (score >= 0.3 || score >= 3.0) {
-      return {
-        text: "Sedang",
-        color: "bg-amber-50 text-amber-600 border-amber-200",
-      };
-    }
-    return {
-      text: "Rendah",
-      color: "bg-rose-50 text-rose-600 border-rose-200",
-    };
-  };
-
-  const uviBadge = uviScore != null ? getUviBadge(uviScore) : null;
+  const rawScore =
+    (rawData as any)?.raw_score ?? (prediction as any)?.raw_score ?? uviScore;
+  const uviInfo =
+    uviScore != null ? evaluateUviScore(uviScore, rawScore) : null;
+  const uviColor = uviInfo?.color || "#02BDDB";
+  const uviBadge = uviInfo
+    ? {
+        text: uviInfo.category,
+        color: uviInfo.color,
+      }
+    : null;
 
   const displayUviNumber =
     uviScore != null
       ? uviScore <= 1 && uviScore > 0
         ? (uviScore * 10).toFixed(1)
         : uviScore.toFixed(1)
+      : null;
+
+  const displayNewUviNumber =
+    newUviScore != null
+      ? newUviScore <= 1 && newUviScore > 0
+        ? (newUviScore * 10).toFixed(1)
+        : newUviScore.toFixed(1)
       : null;
 
   const uviOffset =
@@ -783,9 +778,36 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                     Foto asli tidak tersedia
                   </div>
                 )}
+                {/* top left */}
                 <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded-md font-medium pointer-events-none">
                   {isVideo ? "Video Asli" : "Foto Asli"}
                 </div>
+                {/* Top Right: Uvi Score */}
+                {displayUviNumber !== null && displayUviNumber !== undefined
+                  ? (() => {
+                      const uviInfo = evaluateUviScore(displayUviNumber);
+                      const displayScore =
+                        Number(displayUviNumber) > 1
+                          ? (Number(displayUviNumber) / 10).toFixed(2)
+                          : Number(displayUviNumber).toFixed(2);
+                      return (
+                        <div
+                          className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                          style={{
+                            backgroundColor: "rgba(17, 24, 39, 0.85)",
+                            borderColor: hexToRgba(uviInfo.color, 0.4),
+                          }}
+                        >
+                          <span className="text-gray-300 font-semibold">
+                            UVI:
+                          </span>
+                          <span style={{ color: uviInfo.color }}>
+                            {displayScore}
+                          </span>
+                        </div>
+                      );
+                    })()
+                  : null}
               </div>
             </div>
 
@@ -901,17 +923,19 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                         cx="60"
                         cy="60"
                         r="50"
-                        className="text-[#00bcd4]"
                         strokeWidth="10"
                         strokeDasharray={2 * Math.PI * 50}
                         strokeDashoffset={uviOffset}
                         strokeLinecap="round"
-                        stroke="currentColor"
+                        stroke={uviColor}
                         fill="transparent"
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-2xl sm:text-3xl font-black text-[#00bcd4]">
+                      <span
+                        className="text-2xl sm:text-3xl font-black"
+                        style={{ color: uviColor }}
+                      >
                         {displayUviNumber}
                       </span>
                       <span className="text-[10px] sm:text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
@@ -924,8 +948,11 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                 {/* Rating Badge & AI Suggestion Paragraph */}
                 <div className="flex-1 space-y-2 text-center sm:text-left min-w-0">
                   {uviBadge && (
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border border-cyan-200 bg-cyan-50 text-cyan-700">
-                      <StarFilled className="text-cyan-500" />
+                    <div
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors"
+                      style={getUviBadgeStyle(uviColor)}
+                    >
+                      <StarFilled style={{ color: uviColor }} />
                       {uviBadge.text}
                     </div>
                   )}
@@ -1204,6 +1231,33 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <div className="absolute top-3 left-3 bg-[#00bcd4]/90 backdrop-blur-xs text-white text-xs px-3 py-1 rounded-md font-semibold pointer-events-none">
                     ✨ AI Generated Redesign
                   </div>
+                  {/* Top Right: Uvi Score */}
+                  {displayNewUviNumber !== null &&
+                  displayNewUviNumber !== undefined
+                    ? (() => {
+                        const uviInfo = evaluateUviScore(displayNewUviNumber);
+                        const displayScore =
+                          Number(displayNewUviNumber) > 1
+                            ? (Number(displayNewUviNumber) / 10).toFixed(2)
+                            : Number(displayNewUviNumber).toFixed(2);
+                        return (
+                          <div
+                            className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                            style={{
+                              backgroundColor: "rgba(17, 24, 39, 0.85)",
+                              borderColor: hexToRgba(uviInfo.color, 0.4),
+                            }}
+                          >
+                            <span className="text-gray-300 font-semibold">
+                              UVI:
+                            </span>
+                            <span style={{ color: uviInfo.color }}>
+                              {displayScore}
+                            </span>
+                          </div>
+                        );
+                      })()
+                    : null}
                 </div>
 
                 {/* Disclaimer banner */}
@@ -1355,6 +1409,32 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                     <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-semibold pointer-events-none">
                       Foto Asli
                     </div>
+                    {/* Top Right: Uvi Score */}
+                    {displayUviNumber !== null && displayUviNumber !== undefined
+                      ? (() => {
+                          const uviInfo = evaluateUviScore(displayUviNumber);
+                          const displayScore =
+                            Number(displayUviNumber) > 1
+                              ? (Number(displayUviNumber) / 10).toFixed(2)
+                              : Number(displayUviNumber).toFixed(2);
+                          return (
+                            <div
+                              className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                              style={{
+                                backgroundColor: "rgba(17, 24, 39, 0.85)",
+                                borderColor: hexToRgba(uviInfo.color, 0.4),
+                              }}
+                            >
+                              <span className="text-gray-300 font-semibold">
+                                UVI:
+                              </span>
+                              <span style={{ color: uviInfo.color }}>
+                                {displayScore}
+                              </span>
+                            </div>
+                          );
+                        })()
+                      : null}
                   </div>
                 </div>
 
@@ -1381,6 +1461,33 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                     <div className="absolute top-2.5 left-2.5 bg-[#00bcd4]/90 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-semibold pointer-events-none">
                       Hasil Redesign AI
                     </div>
+                    {/* Top Right: Uvi Score */}
+                    {displayNewUviNumber !== null &&
+                    displayNewUviNumber !== undefined
+                      ? (() => {
+                          const uviInfo = evaluateUviScore(displayNewUviNumber);
+                          const displayScore =
+                            Number(displayNewUviNumber) > 1
+                              ? (Number(displayNewUviNumber) / 10).toFixed(2)
+                              : Number(displayNewUviNumber).toFixed(2);
+                          return (
+                            <div
+                              className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                              style={{
+                                backgroundColor: "rgba(17, 24, 39, 0.85)",
+                                borderColor: hexToRgba(uviInfo.color, 0.4),
+                              }}
+                            >
+                              <span className="text-gray-300 font-semibold">
+                                UVI:
+                              </span>
+                              <span style={{ color: uviInfo.color }}>
+                                {displayScore}
+                              </span>
+                            </div>
+                          );
+                        })()
+                      : null}
                   </div>
                 </div>
               </div>

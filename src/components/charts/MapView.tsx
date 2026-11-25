@@ -54,78 +54,13 @@ export const PVI_LEVELS = [
   },
 ] as const;
 
-export interface UviEvaluation {
-  level: number;
-  category: string;
-  color: string;
-}
+import {
+  evaluateUviScore,
+  hexToRgba,
+  type UviEvaluation,
+} from "../../utils/uvi";
 
-export function evaluateUviScore(
-  uviScore: number | null | undefined,
-  rawScore?: number | null | undefined,
-): UviEvaluation {
-  if (
-    rawScore === null ||
-    uviScore === null ||
-    uviScore === undefined ||
-    isNaN(uviScore) ||
-    uviScore < 0.0
-  ) {
-    return {
-      level: 1,
-      category: "Sangat rendah",
-      color: "#C62828",
-    };
-  }
-  if (uviScore < 0.0492) {
-    return {
-      level: 2,
-      category: "Rendah",
-      color: "#E53935",
-    };
-  }
-  if (uviScore < 0.1704) {
-    return {
-      level: 3,
-      category: "Cenderung rendah",
-      color: "#FF7043",
-    };
-  }
-  if (uviScore < 0.2917) {
-    return {
-      level: 4,
-      category: "Sedang",
-      color: "#FFA000",
-    };
-  }
-  if (uviScore < 0.413) {
-    return {
-      level: 5,
-      category: "Cenderung tinggi",
-      color: "#4CAF50",
-    };
-  }
-  if (uviScore < 0.5343) {
-    return {
-      level: 6,
-      category: "Tinggi",
-      color: "#00BFA5",
-    };
-  }
-  return {
-    level: 7,
-    category: "Sangat tinggi",
-    color: "#02BDDB",
-  };
-}
-
-function hexToRgba(hex: string, alpha: number = 0.3): string {
-  const clean = hex.replace("#", "");
-  const r = parseInt(clean.substring(0, 2), 16);
-  const g = parseInt(clean.substring(2, 4), 16);
-  const b = parseInt(clean.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
+export { evaluateUviScore, hexToRgba, type UviEvaluation };
 
 export function calculateOffset(
   index: number,

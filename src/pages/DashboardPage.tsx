@@ -11,6 +11,7 @@ import {
 } from "../api/street-photos.service";
 import { useProjects } from "../hooks/useProjects";
 import { useNavigate } from "react-router-dom";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 /* ============================================================
    Recent Projects Card
@@ -22,12 +23,6 @@ function RecentProjectsCard() {
   useEffect(() => {
     fetchProjects(1, 10);
   }, [fetchProjects]);
-
-  const getUviBadgeClass = (score: number) => {
-    if (score >= 7) return "uvi-badge-high";
-    if (score >= 4) return "uvi-badge-medium";
-    return "uvi-badge-low";
-  };
 
   return (
     <Card
@@ -70,7 +65,7 @@ function RecentProjectsCard() {
           />
         </div>
       ) : (
-        <div className="flex-1 flex flex-col gap-2.5 overflow-y-auto max-h-[380px] pr-1">
+        <div className="flex-1 flex flex-col gap-2.5 overflow-y-auto max-h-95 pr-1">
           {projects.map((p) => (
             <div
               key={p.id}
@@ -78,7 +73,7 @@ function RecentProjectsCard() {
               className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/50 hover:border-blue-100 border border-transparent transition-all duration-200 cursor-pointer group"
             >
               {/* Thumbnail */}
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-100 to-blue-100 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-emerald-100 to-blue-100 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
                 <EnvironmentOutlined className="text-blue-500 text-base" />
               </div>
 
@@ -88,7 +83,12 @@ function RecentProjectsCard() {
                   <span className="text-xs sm:text-sm font-semibold text-gray-800 truncate group-hover:text-blue-600 transition-colors">
                     {p.name}
                   </span>
-                  <span className={`${getUviBadgeClass(p.uvi_score)} shrink-0 text-[10px] sm:text-xs`}>
+                  <span
+                    className="shrink-0 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold border"
+                    style={getUviBadgeStyle(
+                      evaluateUviScore(p.uvi_score).color,
+                    )}
+                  >
                     UVI {p.uvi_score?.toFixed(2)}
                   </span>
                 </div>
@@ -98,7 +98,7 @@ function RecentProjectsCard() {
               </div>
 
               {/* Right info */}
-              <div className="text-right flex-shrink-0">
+              <div className="text-right shrink-0">
                 <div className="text-[11px] text-gray-400 font-medium">
                   {new Date(p.created_at).toLocaleDateString("id-ID", {
                     day: "numeric",
@@ -165,6 +165,7 @@ export default function DashboardPage() {
                   return {
                     ...kpi,
                     value: average_scores.uvi_score.toFixed(2),
+                    color: evaluateUviScore(average_scores.uvi_score).color,
                   };
                 default:
                   return kpi;

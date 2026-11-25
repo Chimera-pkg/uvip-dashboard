@@ -16,6 +16,7 @@ import {
   type LLMAdviceRecommendation,
 } from "../api/segmentation-results.service";
 import { resolveMediaUrl } from "../components/SegmentationResultView";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 export default function AiRecommendationDetailPage() {
   const { photoId } = useParams<{ photoId: string }>();
@@ -129,6 +130,7 @@ export default function AiRecommendationDetailPage() {
   // Score metrics
   const uviScore: number | null =
     prediction?.uvi_score ?? rawData?.uvi_score ?? null;
+  const uviInfo = evaluateUviScore(uviScore, rawData?.raw_score);
   const displayUviNumber =
     uviScore != null
       ? uviScore <= 1 && uviScore > 0
@@ -268,8 +270,11 @@ export default function AiRecommendationDetailPage() {
         {/* UVI Comparison Footer Note */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 pt-3 border-t border-gray-100 text-xs text-gray-500">
           {displayUviNumber && (
-            <span className="bg-cyan-50 text-[#00acc1] border border-cyan-200/80 font-bold px-2.5 py-0.5 rounded-full text-[11px] shrink-0">
-              UVI saat ini {displayUviNumber}
+            <span
+              className="font-bold px-2.5 py-0.5 rounded-full text-[11px] shrink-0 border"
+              style={getUviBadgeStyle(uviInfo.color)}
+            >
+              UVI saat ini {displayUviNumber} ({uviInfo.category})
             </span>
           )}
           <span>

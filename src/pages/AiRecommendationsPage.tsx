@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useProjects } from "../hooks/useProjects";
 import { useStreetPhotos } from "../hooks/useStreetPhotos";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 export default function AiRecommendationsPage() {
   const navigate = useNavigate();
@@ -131,6 +132,7 @@ export default function AiRecommendationsPage() {
                 )}`;
             const uviScore =
               photo.uvi_score ?? (photo as any).raw_score ?? null;
+            const uviInfo = evaluateUviScore(uviScore);
             const displayUvi =
               uviScore != null ? Number(uviScore).toFixed(2) : null;
 
@@ -170,7 +172,10 @@ export default function AiRecommendationsPage() {
                         Selesai
                       </span>
                       {displayUvi && (
-                        <span className="bg-blue-50 text-blue-600 text-[11px] px-2.5 py-0.5 rounded-full font-semibold border border-blue-200">
+                        <span
+                          className="text-[11px] px-2.5 py-0.5 rounded-full font-bold border"
+                          style={getUviBadgeStyle(uviInfo.color)}
+                        >
                           UVI {displayUvi}
                         </span>
                       )}

@@ -10,6 +10,7 @@ import {
   type SegmentationResult,
 } from "../api/segmentation-results.service";
 import { resolveMediaUrl } from "../components/SegmentationResultView";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 interface CorridorIndicator {
   key: string;
@@ -214,6 +215,10 @@ export default function CorridorComparisonPage() {
     const photo = photos.find((p) => p.id === photoId);
     const indicators = extractIndicators(result);
     const uviScore = getUviScore(result);
+    const uviInfo = evaluateUviScore(
+      uviScore !== "-" ? uviScore : null,
+      (result as any)?.raw_score,
+    );
 
     // Resolve thumbnail image URL
     const photoUrl = resolveMediaUrl(
@@ -301,9 +306,24 @@ export default function CorridorComparisonPage() {
               <span className="text-xs sm:text-sm font-medium text-slate-500">
                 Rata-rata UVI
               </span>
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#16a34a] tracking-tight">
-                {uviScore}
-              </span>
+              <div className="flex items-baseline gap-2">
+                <span
+                  className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+                  style={{
+                    color: uviScore !== "-" ? uviInfo.color : "#94a3b8",
+                  }}
+                >
+                  {uviScore}
+                </span>
+                {uviScore !== "-" && (
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[11px] font-semibold border"
+                    style={getUviBadgeStyle(uviInfo.color)}
+                  >
+                    {uviInfo.category}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Visual Environment Indicators Progress Bars */}

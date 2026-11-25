@@ -10,6 +10,7 @@ import {
   segmentationResultsService,
   type SegmentationResult,
 } from "../api/segmentation-results.service";
+import { evaluateUviScore, getUviBadgeStyle } from "../utils/uvi";
 
 export default function UviAnalysisPage() {
   const navigate = useNavigate();
@@ -103,6 +104,7 @@ export default function UviAnalysisPage() {
       : null;
 
   const displayUvi = uviNumber !== null ? uviNumber.toFixed(2) : "0.00";
+  const mainUviInfo = evaluateUviScore(uviNumber);
 
   // Extract Beauty, Safety, Comfort scores
   const beautyScore =
@@ -145,13 +147,17 @@ export default function UviAnalysisPage() {
       key: "uvi",
       render: (_: any, record: StreetPhoto) => {
         const uvi = record.prediction?.uvi_score ?? record.uvi_score;
+        const uviEval = evaluateUviScore(uvi, (record as any).raw_score);
         const formatted =
           uvi !== null && uvi !== undefined && !isNaN(Number(uvi))
             ? (Number(uvi) > 1 ? Number(uvi) / 10 : Number(uvi)).toFixed(2)
             : "-";
 
         return (
-          <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
+          <span
+            className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border transition-colors"
+            style={getUviBadgeStyle(uviEval.color)}
+          >
             {formatted}
           </span>
         );
@@ -252,13 +258,24 @@ export default function UviAnalysisPage() {
 
             {/* Big UVI Score Display */}
             <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl font-black text-[#16a34a] tracking-tight">
+              <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+                <span
+                  className="text-5xl sm:text-6xl font-black tracking-tight"
+                  style={{ color: mainUviInfo.color }}
+                >
                   {displayUvi}
                 </span>
                 <span className="text-xl sm:text-2xl font-bold text-slate-400">
                   / 1
                 </span>
+                {uviNumber !== null && (
+                  <span
+                    className="ml-2 px-3 py-1 rounded-full text-xs font-bold border"
+                    style={getUviBadgeStyle(mainUviInfo.color)}
+                  >
+                    {mainUviInfo.category}
+                  </span>
+                )}
               </div>
             </div>
 

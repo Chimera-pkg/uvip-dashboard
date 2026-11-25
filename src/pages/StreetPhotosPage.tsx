@@ -11,6 +11,7 @@ import {
 import { useStreetPhotos } from "../hooks/useStreetPhotos";
 import { useProjects } from "../hooks/useProjects";
 import { streetPhotosService } from "../api/street-photos.service";
+import { evaluateUviScore, hexToRgba } from "../utils/uvi";
 import dayjs from "dayjs";
 
 export default function StreetPhotosPage() {
@@ -22,14 +23,16 @@ export default function StreetPhotosPage() {
 
   const locationState = (location.state as any) || {};
 
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() => {
-    return (
-      locationState.projectId ||
-      searchParams.get("projectId") ||
-      sessionStorage.getItem("selected_street_photo_project_id") ||
-      null
-    );
-  });
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    () => {
+      return (
+        locationState.projectId ||
+        searchParams.get("projectId") ||
+        sessionStorage.getItem("selected_street_photo_project_id") ||
+        null
+      );
+    },
+  );
 
   const [currentPage, setCurrentPage] = useState<number>(() => {
     const fromState = locationState.currentPage;
@@ -69,7 +72,13 @@ export default function StreetPhotosPage() {
         { replace: true },
       );
     }
-  }, [selectedProjectId, currentPage, pageSize, fetchStreetPhotos, setSearchParams]);
+  }, [
+    selectedProjectId,
+    currentPage,
+    pageSize,
+    fetchStreetPhotos,
+    setSearchParams,
+  ]);
 
   const handleProjectChange = (val: string | null) => {
     setSelectedProjectId(val || null);
@@ -200,6 +209,35 @@ export default function StreetPhotosPage() {
                       Photo
                     </div>
 
+                    {/* Top Right: Uvi Score */}
+                    {record.prediction?.uvi_score !== null &&
+                    record.prediction?.uvi_score !== undefined ? (
+                      (() => {
+                        const uviInfo = evaluateUviScore(
+                          record.prediction.uvi_score,
+                          (record as any).raw_score,
+                        );
+                        const displayScore =
+                          Number(record.prediction.uvi_score) > 1
+                            ? (Number(record.prediction.uvi_score) / 10).toFixed(2)
+                            : Number(record.prediction.uvi_score).toFixed(2);
+                        return (
+                          <div
+                            className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                            style={{
+                              backgroundColor: "rgba(17, 24, 39, 0.85)",
+                              borderColor: hexToRgba(uviInfo.color, 0.4),
+                            }}
+                          >
+                            <span className="text-gray-300 font-semibold">UVI:</span>
+                            <span style={{ color: uviInfo.color }}>
+                              {displayScore}
+                            </span>
+                          </div>
+                        );
+                      })()
+                    ) : null}
+
                     {/* Bottom Right: Size */}
                     <div className="absolute bottom-3 right-3 bg-gray-900/80 text-white text-xs px-2 py-1 rounded-md font-medium z-10 pointer-events-none">
                       {(record.file_size_kb / 1024).toFixed(2)} MB
@@ -241,7 +279,7 @@ export default function StreetPhotosPage() {
                   <div className="flex items-center text-gray-400 text-xs gap-1.5 mb-5">
                     <UserOutlined />
                     <span className="truncate max-w-25">
-                      {record.uploaded_by || "Unknown User"}
+                      {record.uploader?.name || "Unknown User"}
                     </span>
                     <span>•</span>
                     <span>

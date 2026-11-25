@@ -5,11 +5,11 @@ import {
   PlayCircleFilled,
   EnvironmentOutlined,
   UserOutlined,
-  MoreOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
 import { useStreetVideos } from "../hooks/useStreetVideos";
 import { useProjects } from "../hooks/useProjects";
+import { evaluateUviScore, hexToRgba } from "../utils/uvi";
 import dayjs from "dayjs";
 
 export default function StreetVideosPage() {
@@ -168,6 +168,47 @@ export default function StreetVideosPage() {
                         <PlayCircleFilled className="text-3xl text-gray-800" />
                       </div>
                     </div>
+
+                    {/* Top Left: Aspect Ratio mock */}
+                    <div className="absolute top-3 left-3 bg-gray-900/80 text-white text-xs px-2 py-1 rounded-md font-medium z-10 pointer-events-none">
+                      Photo
+                    </div>
+
+                    {/* Top Right: Uvi Score */}
+                    <div className="absolute top-3 right-3 bg-gray-900/80 text-white text-xs px-2 py-1 rounded-md font-medium z-10 pointer-events-none">
+                      UVI: {record.prediction?.uvi_score}
+                    </div>
+                    {record.prediction?.uvi_score !== null &&
+                    record.prediction?.uvi_score !== undefined
+                      ? (() => {
+                          const uviInfo = evaluateUviScore(
+                            record.prediction.uvi_score,
+                            (record as any).raw_score,
+                          );
+                          const displayScore =
+                            Number(record.prediction.uvi_score) > 1
+                              ? (
+                                  Number(record.prediction.uvi_score) / 10
+                                ).toFixed(2)
+                              : Number(record.prediction.uvi_score).toFixed(2);
+                          return (
+                            <div
+                              className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
+                              style={{
+                                backgroundColor: "rgba(17, 24, 39, 0.85)",
+                                borderColor: hexToRgba(uviInfo.color, 0.4),
+                              }}
+                            >
+                              <span className="text-gray-300 font-semibold">
+                                UVI:
+                              </span>
+                              <span style={{ color: uviInfo.color }}>
+                                {displayScore}
+                              </span>
+                            </div>
+                          );
+                        })()
+                      : null}
                   </div>
 
                   {/* File Info */}
@@ -178,12 +219,6 @@ export default function StreetVideosPage() {
                     >
                       {record.original_filename}
                     </h3>
-                    <Button
-                      type="text"
-                      icon={<MoreOutlined />}
-                      size="small"
-                      className="text-gray-500"
-                    />
                   </div>
 
                   {/* Location & Source */}
@@ -205,7 +240,7 @@ export default function StreetVideosPage() {
                   <div className="flex items-center text-gray-400 text-xs gap-1.5 mb-5">
                     <UserOutlined />
                     <span className="truncate max-w-25">
-                      {record.uploaded_by || "Unknown User"}
+                      {record.uploader?.name || "Unknown User"}
                     </span>
                     <span>•</span>
                     <span>

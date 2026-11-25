@@ -23,6 +23,12 @@ export interface StreetPhoto {
   captured_at: string;
   created_at: string;
   uvi_score?: number | string | null;
+  uploader?: {
+    id: string;
+    name: string;
+    email: string;
+    profile_file_path: string;
+  };
   prediction?: {
     id?: string;
     segmentation_id?: string;
@@ -82,7 +88,11 @@ export interface StreetPhotoRequest {
 }
 
 export const streetPhotosService = {
-  async getStreetPhotos(projectId?: string, page = 1, size = 10): Promise<PaginatedStreetPhotos> {
+  async getStreetPhotos(
+    projectId?: string,
+    page = 1,
+    size = 10,
+  ): Promise<PaginatedStreetPhotos> {
     const params: Record<string, any> = { page, size };
     if (projectId) {
       params.project_id = projectId;
@@ -128,7 +138,10 @@ export const streetPhotosService = {
     return response.data;
   },
 
-  async updateStreetPhoto(id: string, data: StreetPhotoRequest): Promise<StreetPhoto> {
+  async updateStreetPhoto(
+    id: string,
+    data: StreetPhotoRequest,
+  ): Promise<StreetPhoto> {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -155,14 +168,19 @@ export const streetPhotosService = {
   },
 
   async exportPhotosExcel(projectId: string): Promise<Blob> {
-    const response = await apiClient.get("/street-photos/export/export-photos-excel", {
-      params: { project_id: projectId },
-      responseType: "blob",
-    });
+    const response = await apiClient.get(
+      "/street-photos/export/export-photos-excel",
+      {
+        params: { project_id: projectId },
+        responseType: "blob",
+      },
+    );
     return response.data;
   },
 
-  async getLocations(projectId?: string | null): Promise<StreetPhotoLocation[]> {
+  async getLocations(
+    projectId?: string | null,
+  ): Promise<StreetPhotoLocation[]> {
     const params: Record<string, string> = {};
     if (projectId) {
       params.project_id = projectId;

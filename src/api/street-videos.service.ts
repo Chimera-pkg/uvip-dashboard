@@ -27,6 +27,16 @@ export interface StreetVideo {
     name?: string;
     email?: string;
     profile_file_path?: string | null;
+  };
+  prediction?: {
+    id?: string;
+    segmentation_id?: string;
+    beauty_score?: number | null;
+    safety_score?: number | null;
+    comfort_score?: number | null;
+    uvi_score?: number | null;
+    gvi_score?: number | null;
+    [key: string]: any;
   } | null;
   project?: {
     id?: string;
@@ -43,7 +53,11 @@ export interface PaginatedStreetVideos {
 }
 
 export const streetVideosService = {
-  async getStreetVideos(projectId?: string, page = 1, size = 10): Promise<PaginatedStreetVideos> {
+  async getStreetVideos(
+    projectId?: string,
+    page = 1,
+    size = 10,
+  ): Promise<PaginatedStreetVideos> {
     const params: Record<string, string | number> = { page, size };
     if (projectId) {
       params.project_id = projectId;
@@ -65,5 +79,5 @@ export const streetVideosService = {
   async getStreetVideoById(id: string): Promise<StreetVideo> {
     const response = await apiClient.get(`/street-videos/${id}`);
     return response.data;
-  }
+  },
 };
