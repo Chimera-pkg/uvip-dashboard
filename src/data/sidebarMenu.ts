@@ -12,6 +12,7 @@ import {
   TeamOutlined,
   UserOutlined,
   UserSwitchOutlined,
+  FileTextOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -81,6 +82,11 @@ export const sidebarMenuItems: MenuItem[] = [
     key: "project-team",
     icon: createElement(TeamOutlined),
     label: "Tim Proyek",
+  },
+  {
+    key: "executive-report",
+    icon: createElement(FileTextOutlined),
+    label: "Laporan Eksekutif",
   },
   {
     key: "users-roles",

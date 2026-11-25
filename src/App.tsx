@@ -17,6 +17,7 @@ import AiRecommendationDetailPage from "./pages/AiRecommendationDetailPage";
 import UviHeatmapPage from "./pages/UviHeatmapPage";
 import CorridorComparisonPage from "./pages/CorridorComparisonPage";
 import ProjectTeamPage from "./pages/ProjectTeamPage";
+import ExecutiveReportPage from "./pages/ExecutiveReportPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import UsersRolesPage from "./pages/UsersRolesPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
@@ -32,7 +33,6 @@ const placeholderRoutes: Array<{ title: string; path: string }> = [
   { title: "Model Training", path: "/ai-model-center/training" },
   { title: "Results", path: "/ai-model-center/results" },
   { title: "Surveys & Missions", path: "/surveys-missions" },
-  { title: "Reports", path: "/reports" },
   { title: "Settings", path: "/settings" },
   { title: "System Monitoring", path: "/system-monitoring" },
 ];
@@ -118,6 +118,15 @@ export default function App() {
         <Route
           path="/tim-proyek"
           element={<Navigate to="/project-team" replace />}
+        />
+        <Route path="/executive-report" element={<ExecutiveReportPage />} />
+        <Route
+          path="/laporan-eksekutif"
+          element={<Navigate to="/executive-report" replace />}
+        />
+        <Route
+          path="/reports"
+          element={<Navigate to="/executive-report" replace />}
         />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route
