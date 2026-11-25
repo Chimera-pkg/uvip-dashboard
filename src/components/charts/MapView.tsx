@@ -2,10 +2,11 @@ import { useMemo, useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Spin, Select, Popover } from "antd";
+import { Spin, Select, Popover, Segmented } from "antd";
 import { EnvironmentOutlined, FolderOutlined } from "@ant-design/icons";
 import { mapCenters, mapPoiLabels, mapLayers } from "../../data/mapData";
 import type { StreetPhotoLocation } from "../../api/street-photos.service";
+import { UviHeatmapCanvasLayer } from "./UviHeatmapMap";
 
 export type MapLayerKey = (typeof mapLayers)[number]["key"];
 
@@ -194,6 +195,9 @@ interface MapViewProps {
   selectedProjectId?: string | null;
   onProjectChange?: (projectId: string | null) => void;
   loadingProjects?: boolean;
+  showHeatmap?: boolean;
+  mapMode?: "streets" | "satellite";
+  onMapModeChange?: (mode: "streets" | "satellite") => void;
 }
 
 function PoiLabel({
@@ -454,7 +458,20 @@ export default function MapView({
   selectedProjectId = null,
   onProjectChange,
   loadingProjects = false,
+  showHeatmap = true,
+  mapMode: mapModeProp,
+  onMapModeChange,
 }: MapViewProps) {
+  const [internalMapMode, setInternalMapMode] = useState<
+    "streets" | "satellite"
+  >("streets");
+  const currentMapMode = mapModeProp ?? internalMapMode;
+
+  const handleMapModeChange = (mode: "streets" | "satellite") => {
+    setInternalMapMode(mode);
+    onMapModeChange?.(mode);
+  };
+
   const center = mapCenters.find((c) => c.name === centerName) ?? mapCenters[0];
 
   const { locationGroups, allValidLocations } = useMemo(() => {
@@ -601,16 +618,34 @@ export default function MapView({
         scrollWheelZoom
         zoomControl
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {currentMapMode === "satellite" ? (
+          <TileLayer
+            key="satellite"
+            attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            maxZoom={19}
+          />
+        ) : (
+          <TileLayer
+            key="streets"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+          />
+        )}
 
         <MapBoundsUpdater locations={allValidLocations} />
 
         {/* POI name labels if no street photos */}
         {allValidLocations.length === 0 &&
           mapPoiLabels.map((poi) => <PoiLabel key={poi.name} {...poi} />)}
+
+        {/* Smooth UVI Heatmap Layer */}
+        <UviHeatmapCanvasLayer
+          groups={locationGroups}
+          locations={allValidLocations}
+          visible={showHeatmap}
+        />
 
         {/* Street photo markers (clustered when zoomed out, berjejer when zoomed in) */}
         <StreetPhotoMarkers groups={locationGroups} />
@@ -686,26 +721,45 @@ export default function MapView({
         </div>
       )}
 
-      {/* Project filter overlay (top-right) */}
-      {projects && projects.length > 0 && (
-        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-2 py-1 sm:px-2.5 sm:py-1.5 border border-gray-200/80 flex items-center gap-1 sm:gap-1.5 max-w-[170px] sm:max-w-none">
-          <FolderOutlined className="text-blue-500 text-xs flex-shrink-0" />
-          <Select
+      {/* Top-right controls: Mode toggle (Peta / Satelit) & Project filter */}
+      <div className="absolute top-3 right-3 z-[1000] flex items-center gap-1.5 sm:gap-2">
+        {/* Mode Peta Toggle */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-md p-0.5 border border-gray-200/80">
+          <Segmented
             size="small"
-            placeholder="Semua Project"
-            allowClear
-            value={selectedProjectId || undefined}
-            onChange={(val) => onProjectChange?.(val ?? null)}
+            value={currentMapMode}
+            onChange={(val) =>
+              handleMapModeChange(val as "streets" | "satellite")
+            }
             options={[
-              { label: "Semua Project", value: "" },
-              ...projects.map((p) => ({ label: p.name, value: p.id })),
+              { label: "Peta", value: "streets" },
+              { label: "Satelit", value: "satellite" },
             ]}
-            loading={loadingProjects}
-            className="w-28 sm:w-40 text-xs"
-            popupMatchSelectWidth={false}
+            className="text-xs font-medium"
           />
         </div>
-      )}
+
+        {/* Project filter overlay */}
+        {projects && projects.length > 0 && (
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-md px-2 py-1 sm:px-2.5 sm:py-1.5 border border-gray-200/80 flex items-center gap-1 sm:gap-1.5 max-w-[170px] sm:max-w-none">
+            <FolderOutlined className="text-blue-500 text-xs flex-shrink-0" />
+            <Select
+              size="small"
+              placeholder="Semua Project"
+              allowClear
+              value={selectedProjectId || undefined}
+              onChange={(val) => onProjectChange?.(val ?? null)}
+              options={[
+                { label: "Semua Project", value: "" },
+                ...projects.map((p) => ({ label: p.name, value: p.id })),
+              ]}
+              loading={loadingProjects}
+              className="w-28 sm:w-40 text-xs"
+              popupMatchSelectWidth={false}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Empty state when selected project has no photo locations */}
       {!loading && allValidLocations.length === 0 && selectedProjectId && (

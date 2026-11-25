@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Button, Checkbox, Select, message } from "antd";
+import { Button, Checkbox, Select, Segmented, message } from "antd";
 import {
   ExportOutlined,
   ReloadOutlined,
@@ -23,6 +23,9 @@ export default function UviHeatmapPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,
   );
+
+  // Map mode: Normal (streets) or Satellite
+  const [mapMode, setMapMode] = useState<"streets" | "satellite">("streets");
 
   // Layer toggles
   const [showHeatmap, setShowHeatmap] = useState<boolean>(true);
@@ -230,6 +233,18 @@ export default function UviHeatmapPage() {
             >
               Muat ulang
             </Button>
+
+            {/* Mode Peta Toggle (Peta / Satelit) */}
+            <Segmented
+              size="middle"
+              value={mapMode}
+              onChange={(val) => setMapMode(val as "streets" | "satellite")}
+              options={[
+                { label: "Peta", value: "streets" },
+                { label: "Satelit", value: "satellite" },
+              ]}
+              className="font-medium text-xs sm:text-sm"
+            />
           </div>
 
           {/* Project Selector (matching Dashboard API filter capability) */}
@@ -267,6 +282,8 @@ export default function UviHeatmapPage() {
           loading={loadingLocations}
           showHeatmap={showHeatmap}
           showPoints={showPoints}
+          mapMode={mapMode}
+          onMapModeChange={setMapMode}
           resetTrigger={resetTrigger}
           onViewportChange={handleViewportChange}
         />

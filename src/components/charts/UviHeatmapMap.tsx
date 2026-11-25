@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState, useRef, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Spin } from "antd";
+import { Spin, Segmented } from "antd";
 import { EnvironmentOutlined } from "@ant-design/icons";
 import { mapCenters } from "../../data/mapData";
 import type { StreetPhotoLocation } from "../../api/street-photos.service";
@@ -22,6 +22,8 @@ export interface UviHeatmapMapProps {
   loading?: boolean;
   showHeatmap?: boolean;
   showPoints?: boolean;
+  mapMode?: "streets" | "satellite";
+  onMapModeChange?: (mode: "streets" | "satellite") => void;
   resetTrigger?: number;
   onViewportChange?: (visibleLocations: PositionedLocationItem[]) => void;
 }
@@ -182,16 +184,27 @@ function MapViewportTracker({
   return null;
 }
 
+export interface HeatmapLocationItem {
+  lat: number;
+  lng: number;
+  uviScore?: number | null;
+}
+
+export interface UviHeatmapCanvasLayerProps {
+  groups?: LocationGroup[];
+  locations?: HeatmapLocationItem[];
+  visible?: boolean;
+}
+
 /**
  * High-performance smooth Canvas Heatmap Layer representing local UVI average
+ * Realistic, zoom-aware, and de-duplicated to prevent opaque blotches.
  */
-function UviHeatmapCanvasLayer({
+export function UviHeatmapCanvasLayer({
+  groups,
   locations,
-  visible,
-}: {
-  locations: PositionedLocationItem[];
-  visible: boolean;
-}) {
+  visible = true,
+}: UviHeatmapCanvasLayerProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -208,7 +221,10 @@ function UviHeatmapCanvasLayer({
     container.appendChild(canvas);
 
     const render = () => {
-      if (!visible || locations.length === 0) {
+      const hasGroups = groups && groups.length > 0;
+      const hasLocations = locations && locations.length > 0;
+
+      if (!visible || (!hasGroups && !hasLocations)) {
         const ctx = canvas.getContext("2d");
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
         return;
@@ -226,42 +242,182 @@ function UviHeatmapCanvasLayer({
       ctx.clearRect(0, 0, size.x, size.y);
 
       const zoom = map.getZoom();
-      // Radius adjusts smoothly with map zoom
-      const radius = Math.max(30, Math.min(85, 45 + (zoom - 14) * 6));
+      const isClustered = zoom < 14;
 
-      // Draw local UVI heat halos
-      for (const loc of locations) {
-        const pt = map.latLngToContainerPoint([loc.lat, loc.lng]);
+      if (hasGroups) {
+        if (isClustered) {
+          // Zoomed out (zoom < 14): draw ONE realistic, subtle heat aura per cluster/group
+          // Prevents stacking multiple overlapping points into solid opaque discs
+          const radius = Math.round(
+            Math.max(20, Math.min(36, 18 + (zoom - 10) * 3.5)),
+          );
 
-        // Cull points outside visible canvas plus margin
-        if (
-          pt.x < -radius ||
-          pt.x > size.x + radius ||
-          pt.y < -radius ||
-          pt.y > size.y + radius
-        ) {
-          continue;
+          for (const group of groups!) {
+            if (group.avgUviScore === null || isNaN(group.avgUviScore)) continue;
+
+            const pt = map.latLngToContainerPoint([
+              group.anchorLat,
+              group.anchorLng,
+            ]);
+
+            // Cull points outside visible canvas plus margin
+            if (
+              pt.x < -radius ||
+              pt.x > size.x + radius ||
+              pt.y < -radius ||
+              pt.y > size.y + radius
+            ) {
+              continue;
+            }
+
+            const [r, g, b] = getUviSpectrumRgb(group.avgUviScore);
+            const grad = ctx.createRadialGradient(
+              pt.x,
+              pt.y,
+              0,
+              pt.x,
+              pt.y,
+              radius,
+            );
+
+            // Natural Gaussian falloff: soft at center, perfectly transparent at edge
+            grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.45)`);
+            grad.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, 0.35)`);
+            grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, 0.20)`);
+            grad.addColorStop(0.75, `rgba(${r}, ${g}, ${b}, 0.07)`);
+            grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else {
+          // Zoomed in (zoom >= 14): draw soft heat halos matching each photo's exact marker position
+          for (const group of groups!) {
+            const isMulti = group.total > 1;
+            // When items are arranged in a grid, radius matches the 22px marker grid spacing
+            const radius = isMulti
+              ? 21
+              : Math.round(Math.max(22, Math.min(36, 22 + (zoom - 14) * 2.5)));
+
+            for (const item of group.items) {
+              if (item.uviScore === null || isNaN(item.uviScore)) continue;
+
+              const anchorPt = map.latLngToContainerPoint([
+                item.anchorLat ?? item.lat,
+                item.anchorLng ?? item.lng,
+              ]);
+
+              const posX = anchorPt.x + (item.dx || 0);
+              const posY = anchorPt.y + (item.dy || 0);
+
+              if (
+                posX < -radius ||
+                posX > size.x + radius ||
+                posY < -radius ||
+                posY > size.y + radius
+              ) {
+                continue;
+              }
+
+              const [r, g, b] = getUviSpectrumRgb(item.uviScore);
+              const grad = ctx.createRadialGradient(
+                posX,
+                posY,
+                0,
+                posX,
+                posY,
+                radius,
+              );
+
+              // Soft overlay opacity so street roads and underlying buildings remain visible
+              const maxAlpha = isMulti ? 0.32 : 0.42;
+              grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${maxAlpha})`);
+              grad.addColorStop(
+                0.3,
+                `rgba(${r}, ${g}, ${b}, ${maxAlpha * 0.75})`,
+              );
+              grad.addColorStop(
+                0.6,
+                `rgba(${r}, ${g}, ${b}, ${maxAlpha * 0.4})`,
+              );
+              grad.addColorStop(
+                0.85,
+                `rgba(${r}, ${g}, ${b}, ${maxAlpha * 0.12})`,
+              );
+              grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+              ctx.fillStyle = grad;
+              ctx.beginPath();
+              ctx.arc(posX, posY, radius, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+      } else if (hasLocations) {
+        // Fallback if groups are not provided: aggregate coordinates by proximity
+        const PROXIMITY = 0.00025;
+        interface AggItem {
+          lat: number;
+          lng: number;
+          totalScore: number;
+          count: number;
+        }
+        const agg: AggItem[] = [];
+        for (const loc of locations!) {
+          if (loc.lat === 0 && loc.lng === 0) continue;
+          const s = loc.uviScore ?? 0.5;
+          const matched = agg.find(
+            (a) =>
+              Math.abs(a.lat - loc.lat) < PROXIMITY &&
+              Math.abs(a.lng - loc.lng) < PROXIMITY,
+          );
+          if (matched) {
+            matched.totalScore += s;
+            matched.count += 1;
+          } else {
+            agg.push({ lat: loc.lat, lng: loc.lng, totalScore: s, count: 1 });
+          }
         }
 
-        const [r, g, b] = getUviSpectrumRgb(loc.uviScore);
-        const grad = ctx.createRadialGradient(
-          pt.x,
-          pt.y,
-          0,
-          pt.x,
-          pt.y,
-          radius,
+        const radius = Math.round(
+          Math.max(20, Math.min(36, 20 + (zoom - 12) * 2.5)),
         );
 
-        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.70)`);
-        grad.addColorStop(0.35, `rgba(${r}, ${g}, ${b}, 0.48)`);
-        grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, 0.20)`);
-        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        for (const item of agg) {
+          const pt = map.latLngToContainerPoint([item.lat, item.lng]);
+          if (
+            pt.x < -radius ||
+            pt.x > size.x + radius ||
+            pt.y < -radius ||
+            pt.y > size.y + radius
+          ) {
+            continue;
+          }
 
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
-        ctx.fill();
+          const avgScore = item.totalScore / item.count;
+          const [r, g, b] = getUviSpectrumRgb(avgScore);
+          const grad = ctx.createRadialGradient(
+            pt.x,
+            pt.y,
+            0,
+            pt.x,
+            pt.y,
+            radius,
+          );
+
+          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.45)`);
+          grad.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, 0.32)`);
+          grad.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.16)`);
+          grad.addColorStop(0.85, `rgba(${r}, ${g}, ${b}, 0.05)`);
+          grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     };
 
@@ -281,7 +437,7 @@ function UviHeatmapCanvasLayer({
         canvas.parentNode.removeChild(canvas);
       }
     };
-  }, [map, locations, visible]);
+  }, [map, groups, locations, visible]);
 
   return null;
 }
@@ -530,9 +686,21 @@ export default function UviHeatmapMap({
   loading = false,
   showHeatmap = true,
   showPoints = true,
+  mapMode: mapModeProp,
+  onMapModeChange,
   resetTrigger = 0,
   onViewportChange,
 }: UviHeatmapMapProps) {
+  const [internalMapMode, setInternalMapMode] = useState<
+    "streets" | "satellite"
+  >("streets");
+  const currentMapMode = mapModeProp ?? internalMapMode;
+
+  const handleMapModeChange = (mode: "streets" | "satellite") => {
+    setInternalMapMode(mode);
+    onMapModeChange?.(mode);
+  };
+
   const defaultCenter =
     mapCenters.find((c) => c.name === centerName) ?? mapCenters[0];
 
@@ -677,6 +845,24 @@ export default function UviHeatmapMap({
         </div>
       )}
 
+      {/* Floating Map Mode Toggle (Peta / Satelit) */}
+      <div className="absolute top-3 right-3 z-1000 flex items-center gap-2">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-md p-0.5 border border-gray-200/80">
+          <Segmented
+            size="small"
+            value={currentMapMode}
+            onChange={(val) =>
+              handleMapModeChange(val as "streets" | "satellite")
+            }
+            options={[
+              { label: "Peta", value: "streets" },
+              { label: "Satelit", value: "satellite" },
+            ]}
+            className="text-xs font-medium"
+          />
+        </div>
+      </div>
+
       <MapContainer
         center={initialCenter}
         zoom={defaultCenter.zoom}
@@ -684,10 +870,21 @@ export default function UviHeatmapMap({
         scrollWheelZoom
         zoomControl
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {currentMapMode === "satellite" ? (
+          <TileLayer
+            key="satellite"
+            attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            maxZoom={19}
+          />
+        ) : (
+          <TileLayer
+            key="streets"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+          />
+        )}
 
         {/* Metric Scale Control (e.g. 200 m) */}
         <MapScaleControl />
@@ -706,6 +903,7 @@ export default function UviHeatmapMap({
 
         {/* Smooth UVI Heatmap Layer */}
         <UviHeatmapCanvasLayer
+          groups={locationGroups}
           locations={allValidLocations}
           visible={showHeatmap}
         />
