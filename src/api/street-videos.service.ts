@@ -22,6 +22,17 @@ export interface StreetVideo {
   error_message: string | null;
   captured_at: string;
   created_at: string;
+  uploader?: {
+    id?: string;
+    name?: string;
+    email?: string;
+    profile_file_path?: string | null;
+  } | null;
+  project?: {
+    id?: string;
+    name?: string;
+    [key: string]: unknown;
+  } | null;
 }
 
 export interface PaginatedStreetVideos {
@@ -32,10 +43,22 @@ export interface PaginatedStreetVideos {
 }
 
 export const streetVideosService = {
-  async getStreetVideos(projectId: string, page = 1, size = 10): Promise<PaginatedStreetVideos> {
+  async getStreetVideos(projectId?: string, page = 1, size = 10): Promise<PaginatedStreetVideos> {
+    const params: Record<string, string | number> = { page, size };
+    if (projectId) {
+      params.project_id = projectId;
+    }
     const response = await apiClient.get("/street-videos/", {
-      params: { project_id: projectId, page, size },
+      params,
     });
+    if (Array.isArray(response.data)) {
+      return {
+        total_data: response.data.length,
+        total_pages: 1,
+        current_page: 1,
+        data: response.data,
+      };
+    }
     return response.data;
   },
 

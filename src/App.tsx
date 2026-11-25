@@ -18,6 +18,7 @@ import UviHeatmapPage from "./pages/UviHeatmapPage";
 import CorridorComparisonPage from "./pages/CorridorComparisonPage";
 import ProjectTeamPage from "./pages/ProjectTeamPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import UsersRolesPage from "./pages/UsersRolesPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 
 /**
@@ -32,7 +33,6 @@ const placeholderRoutes: Array<{ title: string; path: string }> = [
   { title: "Results", path: "/ai-model-center/results" },
   { title: "Surveys & Missions", path: "/surveys-missions" },
   { title: "Reports", path: "/reports" },
-  { title: "Users & Roles", path: "/users-roles" },
   { title: "Settings", path: "/settings" },
   { title: "System Monitoring", path: "/system-monitoring" },
 ];
@@ -124,6 +124,7 @@ export default function App() {
           path="/user-profile"
           element={<Navigate to="/profile" replace />}
         />
+        <Route path="/users-roles" element={<UsersRolesPage />} />
         <Route path="/spatial-analysis" element={<SpatialAnalysisPage />} />
         <Route
           path="/predictive-simulation"

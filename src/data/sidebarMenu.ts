@@ -11,6 +11,7 @@ import {
   LineChartOutlined,
   TeamOutlined,
   UserOutlined,
+  UserSwitchOutlined,
   // ExperimentOutlined,
   // DatabaseOutlined,
   // RobotOutlined,
@@ -82,6 +83,11 @@ export const sidebarMenuItems: MenuItem[] = [
     label: "Tim Proyek",
   },
   {
+    key: "users-roles",
+    icon: createElement(UserSwitchOutlined),
+    label: "Akun",
+  },
+  {
     key: "profile",
     icon: createElement(UserOutlined),
     label: "Profil Pengguna",
@@ -123,11 +129,6 @@ export const sidebarMenuItems: MenuItem[] = [
   //   key: "reports",
   //   icon: createElement(FileTextOutlined),
   //   label: "Reports",
-  // },
-  // {
-  //   key: "users-roles",
-  //   icon: createElement(TeamOutlined),
-  //   label: "Users & Roles",
   // },
   // {
   //   key: "settings",

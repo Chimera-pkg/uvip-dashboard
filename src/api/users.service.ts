@@ -1,11 +1,20 @@
 import apiClient from './client';
 
+export type UserRole = 'admin' | 'surveyor' | 'planner' | 'officer' | string;
+
+export const USER_ROLE_OPTIONS: Array<{ value: UserRole; label: string }> = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'surveyor', label: 'Surveyor' },
+  { value: 'planner', label: 'Planner' },
+  { value: 'officer', label: 'Officer' },
+];
+
 export interface User {
   id: string;
   email: string;
   name: string;
   full_name?: string;
-  role: string;
+  role: UserRole;
   is_active: boolean;
   last_login_at?: string | null;
   created_at: string;
@@ -13,11 +22,25 @@ export interface User {
   profile_file_path?: string | null;
 }
 
+export interface PaginatedUsers {
+  total_data: number;
+  total_pages: number;
+  current_page: number;
+  data: User[];
+}
+
+export interface GetUsersParams {
+  page?: number;
+  size?: number;
+  search?: string;
+}
+
 export interface CreateUserRequest {
   email: string;
   password: string;
-  full_name: string;
-  role: string;
+  name?: string;
+  full_name?: string;
+  role: UserRole;
 }
 
 export interface UpdateProfileRequest {
@@ -33,8 +56,23 @@ export interface UpdatePasswordRequest {
 }
 
 export const usersService = {
-  async getUsers(): Promise<User[]> {
-    const response = await apiClient.get('/users');
+  async getUsers(params: GetUsersParams = {}): Promise<PaginatedUsers> {
+    const queryParams: Record<string, string | number> = {
+      page: params.page ?? 1,
+      size: params.size ?? 10,
+    };
+    if (params.search && params.search.trim()) {
+      queryParams.search = params.search.trim();
+    }
+    const response = await apiClient.get('/users/', { params: queryParams });
+    if (Array.isArray(response.data)) {
+      return {
+        total_data: response.data.length,
+        total_pages: 1,
+        current_page: 1,
+        data: response.data,
+      };
+    }
     return response.data;
   },
 
@@ -44,7 +82,13 @@ export const usersService = {
   },
 
   async createUser(data: CreateUserRequest): Promise<User> {
-    const response = await apiClient.post('/users', data);
+    const payload = {
+      name: (data.name ?? data.full_name ?? '').trim(),
+      email: data.email.trim(),
+      password: data.password,
+      role: data.role,
+    };
+    const response = await apiClient.post('/auth/register', payload);
     return response.data;
   },
 
@@ -58,7 +102,7 @@ export const usersService = {
     return response.data;
   },
 
-  async updatePassword(data: UpdatePasswordRequest): Promise<any> {
+  async updatePassword(data: UpdatePasswordRequest): Promise<unknown> {
     const response = await apiClient.patch('/users/me/password', data);
     return response.data;
   },
