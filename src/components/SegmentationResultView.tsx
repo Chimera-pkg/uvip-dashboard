@@ -356,6 +356,8 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
     null;
   const vehiclePct: number | null =
     rawData.vehicle_pct ?? seg.vehicle_pct ?? null;
+  const pedestrianPct: number | null =
+    rawData.pedestrian_pct ?? seg.pedestrian_pct ?? null;
   const signagePct: number | null =
     rawData.signage_pct ?? seg.signage_pct ?? null;
   const visualClutterIndex: number | null =
@@ -492,6 +494,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
     { label: "Sky", color: "#00b4d8", val: skyPct },
     { label: "Vehicles", color: "#ef4444", val: vehiclePct },
     { label: "Building", color: "#8b5cf6", val: buildingPct },
+    { label: "Manusia", color: "#f97316", val: pedestrianPct },
     { label: "Sidewalk", color: "#eab308", val: sidewalkPct },
     { label: "Road", color: "#334155", val: roadPct },
   ];
