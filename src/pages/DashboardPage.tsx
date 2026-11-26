@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Row, Col, Spin, Empty } from "antd";
 import { EnvironmentOutlined, DashboardOutlined } from "@ant-design/icons";
+import KpiCard from "../components/charts/KpiCard";
 import MapView from "../components/charts/MapView";
 import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
 import apiClient from "../api/client";
@@ -118,7 +119,7 @@ function RecentProjectsCard() {
    Dashboard Page (Main Export)
    ============================================================ */
 export default function DashboardPage() {
-  const [ setKpis] = useState<KpiItem[]>(initialKpiData);
+  const [kpis, setKpis] = useState<KpiItem[]>(initialKpiData);
   const [photoLocations, setPhotoLocations] = useState<StreetPhotoLocation[]>(
     [],
   );
@@ -133,52 +134,52 @@ export default function DashboardPage() {
     fetchProjects(1, 100);
   }, [fetchProjects]);
 
-  // useEffect(() => {
-  //   const fetchDashboardData = async () => {
-  //     try {
-  //       const response = await apiClient.get("/projects/home-dashboard");
-  //       if (response.data?.status === "success") {
-  //         const { total_projects, average_scores } = response.data;
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await apiClient.get("/projects/home-dashboard");
+        if (response.data?.status === "success") {
+          const { total_projects, average_scores } = response.data;
 
-  //         setKpis((prevKpis) =>
-  //           prevKpis.map((kpi) => {
-  //             switch (kpi.key) {
-  //               case "total-projects":
-  //                 return { ...kpi, value: total_projects.toString() };
-  //               case "avg-safety":
-  //                 return {
-  //                   ...kpi,
-  //                   value: average_scores.safety_score.toFixed(2),
-  //                 };
-  //               case "avg-beauty":
-  //                 return {
-  //                   ...kpi,
-  //                   value: average_scores.beauty_score.toFixed(2),
-  //                 };
-  //               case "avg-comfort":
-  //                 return {
-  //                   ...kpi,
-  //                   value: average_scores.comfort_score.toFixed(2),
-  //                 };
-  //               case "avg-uvi":
-  //                 return {
-  //                   ...kpi,
-  //                   value: average_scores.uvi_score.toFixed(2),
-  //                   color: evaluateUviScore(average_scores.uvi_score).color,
-  //                 };
-  //               default:
-  //                 return kpi;
-  //             }
-  //           }),
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to fetch dashboard data:", error);
-  //     }
-  //   };
+          setKpis((prevKpis) =>
+            prevKpis.map((kpi) => {
+              switch (kpi.key) {
+                case "total-projects":
+                  return { ...kpi, value: total_projects.toString() };
+                case "avg-safety":
+                  return {
+                    ...kpi,
+                    value: average_scores.safety_score.toFixed(2),
+                  };
+                case "avg-beauty":
+                  return {
+                    ...kpi,
+                    value: average_scores.beauty_score.toFixed(2),
+                  };
+                case "avg-comfort":
+                  return {
+                    ...kpi,
+                    value: average_scores.comfort_score.toFixed(2),
+                  };
+                case "avg-uvi":
+                  return {
+                    ...kpi,
+                    value: average_scores.uvi_score.toFixed(2),
+                    color: evaluateUviScore(average_scores.uvi_score).color,
+                  };
+                default:
+                  return kpi;
+              }
+            }),
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
 
-  //   fetchDashboardData();
-  // }, []);
+    fetchDashboardData();
+  }, []);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -206,11 +207,11 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
         {kpis.map((kpi) => (
           <KpiCard key={kpi.key} kpi={kpi} />
         ))}
-      </div> */}
+      </div>
 
       {/* Middle Section */}
       <Row gutter={[16, 16]} className="mb-5">

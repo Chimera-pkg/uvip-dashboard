@@ -57,7 +57,6 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
           </div>
         </div>
         <div className="w-14 sm:w-16 h-8 flex-shrink-0 ml-1 self-center">
-          <SparklineChart data={kpi.sparkData} color={kpi.color} />
         </div>
       </div>
     </Card>
