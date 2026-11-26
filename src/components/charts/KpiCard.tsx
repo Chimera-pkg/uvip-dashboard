@@ -7,7 +7,6 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import type { KpiItem } from "../../data/kpiData";
-import SparklineChart from "./SparklineChart";
 
 const ICONS: Record<string, React.ReactNode> = {
   "total-projects": <AimOutlined />,
@@ -25,7 +24,7 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
     >
       <div className="flex items-center ">
         <div
-          className="h-10 w-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+          className="h-10 w-10 rounded-lg flex items-center justify-center text-lg shrink-0"
           style={{ background: `${kpi.color}1a`, color: kpi.color }}
         >
           {ICONS[kpi.key] ?? <EnvironmentOutlined />}
@@ -56,8 +55,7 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
             <span className="text-gray-400 font-normal"> vs last period</span>
           </div>
         </div>
-        <div className="w-14 sm:w-16 h-8 flex-shrink-0 ml-1 self-center">
-        </div>
+        <div className="w-14 sm:w-16 h-8 shrink-0 ml-1 self-center"></div>
       </div>
     </Card>
   );
