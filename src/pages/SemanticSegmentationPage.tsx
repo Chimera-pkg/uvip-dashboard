@@ -275,7 +275,7 @@ export default function SemanticSegmentationPage() {
 
   const negativeFactors = [
     {
-      label: "Kepadatan Reklame",
+      label: "Kepadatan Rambu",
       icon: "🪧",
       val: signagePct ?? visualClutterIndex,
       pct:

@@ -600,7 +600,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
 
   const negativeFactors = [
     signagePct != null && {
-      label: "Kepadatan Reklame",
+      label: "Kepadatan Rambu",
       icon: <span>🪧</span>,
       val: signagePct,
       pct: Math.min(100, Math.round(signagePct)),
