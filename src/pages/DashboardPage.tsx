@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, Row, Col, Spin, Empty } from "antd";
 import { EnvironmentOutlined, DashboardOutlined } from "@ant-design/icons";
-import KpiCard from "../components/charts/KpiCard";
 import MapView from "../components/charts/MapView";
 import { kpiData as initialKpiData, type KpiItem } from "../data/kpiData";
 import apiClient from "../api/client";
