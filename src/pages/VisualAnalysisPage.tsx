@@ -202,11 +202,12 @@ export default function VisualAnalysisPage() {
   // Dynamic legends (exact colors and definitions from SegmentationResultView)
   const candidateLegends = [
     { label: "Vegetasi", color: "#22c55e", val: vegetationPct },
-    { label: "Sky", color: "#00b4d8", val: skyPct },
-    { label: "Vehicles", color: "#ef4444", val: vehiclePct },
-    { label: "Building", color: "#8b5cf6", val: buildingPct },
-    { label: "Sidewalk", color: "#eab308", val: sidewalkPct },
-    { label: "Road", color: "#334155", val: roadPct },
+    { label: "Langit", color: "#00b4d8", val: skyPct },
+    { label: "Kendaraan", color: "#ef4444", val: vehiclePct },
+    { label: "Gedung", color: "#8b5cf6", val: buildingPct },
+    { label: "Manusia", color: "#f97316", val: buildingPct },
+    { label: "Trotoar", color: "#eab308", val: sidewalkPct },
+    { label: "Jalan", color: "#334155", val: roadPct },
   ];
   const legendItems = candidateLegends.filter((item) => item.val != null);
 
@@ -484,7 +485,7 @@ export default function VisualAnalysisPage() {
 
                   {/* Color Legend (Identical to SegmentationResultView) */}
                   {legendItems.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 pt-2 border-t border-gray-100">
                       {legendItems.map((item) => (
                         <div
                           key={item.label}

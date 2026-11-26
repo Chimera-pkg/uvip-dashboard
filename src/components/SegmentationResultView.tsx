@@ -494,7 +494,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
     { label: "Sky", color: "#00b4d8", val: skyPct },
     { label: "Vehicles", color: "#ef4444", val: vehiclePct },
     { label: "Building", color: "#8b5cf6", val: buildingPct },
-    { label: "Manusia", color: "#f97316", val: pedestrianPct },
+    { label: "Human", color: "#f97316", val: pedestrianPct },
     { label: "Sidewalk", color: "#eab308", val: sidewalkPct },
     { label: "Road", color: "#334155", val: roadPct },
   ];

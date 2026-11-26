@@ -183,12 +183,6 @@ export default function SemanticSegmentationPage() {
   // Visual Composition Progress Bars (Bangunan, Vegetasi, Langit, Permukaan/Trotoar, Jalan, Manusia, Kendaraan)
   const visualCompositionItems = [
     {
-      label: "Bangunan",
-      // color: "#f97316",
-      color: "#8b5cf6",
-      val: buildingPct,
-    },
-    {
       label: "Vegetasi",
       color: "#22c55e",
       val: vegetationPct,
@@ -197,6 +191,21 @@ export default function SemanticSegmentationPage() {
       label: "Langit",
       color: "#00b4d8",
       val: skyPct,
+    },
+    {
+      label: "Kendaraan",
+      color: "#ef4444",
+      val: vehiclePct ?? 0.2,
+    },
+    {
+      label: "Bangunan",
+      color: "#8b5cf6",
+      val: buildingPct,
+    },
+    {
+      label: "Manusia",
+      color: "#f97316",
+      val: pedestrianPct ?? 0.3,
     },
     {
       label: "Permukaan / Trotoar",
@@ -213,21 +222,11 @@ export default function SemanticSegmentationPage() {
           },
         ]
       : []),
-    {
-      label: "Manusia",
-      color: "#ec4899",
-      val: pedestrianPct ?? 0.3,
-    },
-    {
-      label: "Kendaraan",
-      color: "#ef4444",
-      val: vehiclePct ?? 0.2,
-    },
   ];
 
   // Data for the Pie Chart diagram (same source as visualCompositionItems)
   const pieChartData = visualCompositionItems
-    .filter((item) => item.val != null && Number(item.val) > 0)
+    // .filter((item) => item.val != null && Number(item.val) > 0)
     .map((item) => ({
       name: item.label,
       value: Number(Number(item.val).toFixed(1)),
@@ -238,10 +237,11 @@ export default function SemanticSegmentationPage() {
   const candidateLegends = [
     { label: "Vegetasi", color: "#22c55e", val: vegetationPct },
     { label: "Sky", color: "#00b4d8", val: skyPct },
-    { label: "Vehicles", color: "#ef4444", val: vehiclePct },
-    { label: "Building", color: "#8b5cf6", val: buildingPct },
-    { label: "Sidewalk", color: "#eab308", val: sidewalkPct },
-    { label: "Road", color: "#334155", val: roadPct },
+    { label: "Kendaraan", color: "#ef4444", val: vehiclePct },
+    { label: "Gedung", color: "#8b5cf6", val: buildingPct },
+    { label: "Manusia", color: "#f97316", val: buildingPct },
+    { label: "Trotoar", color: "#eab308", val: sidewalkPct },
+    { label: "Jalan", color: "#334155", val: roadPct },
   ];
   const legendItems = candidateLegends.filter((item) => item.val != null);
 
@@ -517,7 +517,7 @@ export default function SemanticSegmentationPage() {
 
                   {/* Color Legend (Identical to SegmentationResultView) */}
                   {legendItems.length > 0 && (
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-2 border-t border-gray-100">
                       {legendItems.map((item) => (
                         <div
                           key={item.label}
