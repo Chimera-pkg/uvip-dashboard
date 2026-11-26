@@ -158,13 +158,13 @@ export default function CorridorComparisonPage() {
     return [
       {
         key: "building",
-        title: "Keterlihatan Bangunan",
+        title: "Visibilitas Bangunan",
         value: toPct(buildingVal),
         color: "#f97316", // Orange
       },
       {
         key: "vegetation",
-        title: "Cakupan Vegetasi",
+        title: "Tutupan Vegetasi",
         value: toPct(vegVal),
         color: "#10b981", // Teal / Emerald
       },
@@ -176,7 +176,7 @@ export default function CorridorComparisonPage() {
       },
       {
         key: "walkability",
-        title: "Aksesibilitas Permukaan",
+        title: "Aksesibilitas Area",
         value: toPct(walkVal),
         color: "#8b5cf6", // Purple
       },

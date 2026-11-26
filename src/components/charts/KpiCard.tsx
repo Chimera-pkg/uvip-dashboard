@@ -23,7 +23,7 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
       className="kpi-card rounded-xl shadow-sm h-full"
       styles={{ body: { padding: "14px 16px" } }}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center ">
         <div
           className="h-10 w-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
           style={{ background: `${kpi.color}1a`, color: kpi.color }}

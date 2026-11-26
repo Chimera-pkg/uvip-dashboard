@@ -253,8 +253,8 @@ export default function VisualAnalysisPage() {
       color: "#f59e0b",
     },
     {
-      title: "Kesemrawutan Visual",
-      subtitle: "Tingkat kesemrawutan objek dan signage",
+      title: "Dominasi Visual",
+      subtitle: "Tingkat dominasi objek dan signage",
       icon: <EyeOutlined className="text-rose-500 text-lg" />,
       pct:
         visualClutterIndex != null

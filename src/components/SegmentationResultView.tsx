@@ -542,8 +542,8 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
       color: "#f59e0b",
     },
     {
-      title: "Kesemrawutan Visual",
-      subtitle: "Tingkat kesemrawutan objek dan signage",
+      title: "Dominasi Visual",
+      subtitle: "Tingkat dominasi objek dan signage",
       icon: <EyeOutlined className="text-rose-500 text-lg" />,
       pct:
         visualClutterIndex != null
@@ -610,20 +610,6 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
       icon: <CarOutlined className="text-red-500" />,
       val: vehiclePct,
       pct: Math.min(100, Math.round(vehiclePct)),
-    },
-    visualClutterIndex != null && {
-      label: "Kesemrawutan Visual",
-      icon: <EyeOutlined className="text-red-500" />,
-      val:
-        visualClutterIndex <= 1 ? visualClutterIndex * 100 : visualClutterIndex,
-      pct: Math.min(
-        100,
-        Math.round(
-          visualClutterIndex <= 1
-            ? visualClutterIndex * 100
-            : visualClutterIndex,
-        ),
-      ),
     },
   ].filter(Boolean) as Array<{
     label: string;

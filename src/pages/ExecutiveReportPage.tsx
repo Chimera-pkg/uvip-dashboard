@@ -25,6 +25,15 @@ const INDICATOR_COLORS: Record<string, string> = {
   visual_dominance_index: "#f59e0b",
 };
 
+// Indicator label mapping (backend key -> Bahasa Indonesia)
+const INDICATOR_LABELS: Record<string, string> = {
+  building_visibility_index: "Visibilitas Bangunan",
+  vegetation_coverage_index: "Tutupan Vegetasi",
+  sky_openness_index: "Keterbukaan Langit",
+  surface_accessibility_index: "Aksesibilitas Area",
+  visual_dominance_index: "Dominasi Visual",
+};
+
 export default function ExecutiveReportPage() {
   const { projects, fetchProjects, loading: loadingProjects } = useProjects();
   const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
@@ -365,7 +374,7 @@ export default function ExecutiveReportPage() {
                       <div key={ind.key} className="space-y-1.5">
                         <div className="flex justify-between items-center text-xs sm:text-sm">
                           <span className="font-semibold text-gray-700">
-                            {ind.label}
+                            {INDICATOR_LABELS[ind.key] || ind.label}
                           </span>
                           <span className="font-bold text-gray-900">
                             {ind.value !== null && ind.value !== undefined
