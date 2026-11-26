@@ -207,11 +207,11 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-5">
         {kpis.map((kpi) => (
           <KpiCard key={kpi.key} kpi={kpi} />
         ))}
-      </div>
+      </div> */}
 
       {/* Middle Section */}
       <Row gutter={[16, 16]} className="mb-5">
