@@ -22,7 +22,7 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
       className="kpi-card rounded-xl shadow-sm h-full"
       styles={{ body: { padding: "14px 16px" } }}
     >
-      <div className="flex items-center ">
+      <div className="flex items-center gap-4">
         <div
           className="h-10 w-10 rounded-lg flex items-center justify-center text-lg shrink-0"
           style={{ background: `${kpi.color}1a`, color: kpi.color }}
@@ -40,19 +40,6 @@ export default function KpiCard({ kpi }: { kpi: KpiItem }) {
             <span className="text-2xl font-bold text-gray-800 leading-none">
               {kpi.value}
             </span>
-            {kpi.suffix && (
-              <span className="text-sm font-medium text-gray-400 leading-none">
-                {kpi.suffix}
-              </span>
-            )}
-          </div>
-          <div
-            className={`text-[11px] mt-1 font-semibold truncate ${
-              kpi.changeType === "up" ? "text-emerald-500" : "text-rose-500"
-            }`}
-          >
-            {kpi.change.slice(0, kpi.change.indexOf(" vs"))}
-            <span className="text-gray-400 font-normal"> vs last period</span>
           </div>
         </div>
         <div className="w-14 sm:w-16 h-8 shrink-0 ml-1 self-center"></div>

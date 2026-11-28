@@ -29,6 +29,7 @@ import { useSegmentationResult } from "../hooks/useSegmentationResult";
 import { useVideoSegmentationResult } from "../hooks/useVideoSegmentationResult";
 import { streetVideosService } from "../api/street-videos.service";
 import { evaluateUviScore, getUviBadgeStyle, hexToRgba } from "../utils/uvi";
+import { BeforeAfterSlider } from "./BeforeAfterSlider";
 import type {
   LLMAdviceContent,
   LLMAdviceRecommendation,
@@ -1359,7 +1360,7 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
             />
           </div>
 
-          {/* PERBANDINGAN VISUAL SEBELUM & SESUDAH (Langsung di dalam Bottom Sheet, tanpa modal terpisah) */}
+          {/* PERBANDINGAN VISUAL SEBELUM & SESUDAH (Interactive Before/After Slider) */}
           {rawImageUrl && generatedImageUrl && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
@@ -1367,119 +1368,24 @@ export const SegmentationResultView: React.FC<SegmentationResultViewProps> = ({
                   <SwapOutlined className="text-[#00bcd4]" />
                   <span>Perbandingan Visual Sebelum & Sesudah</span>
                 </h3>
-                <span className="text-[11px] text-gray-400 font-medium hidden sm:inline">
-                  Klik gambar untuk melihat resolusi penuh
+                <span className="text-[11px] bg-cyan-100 text-cyan-800 px-2.5 py-0.5 rounded-full font-bold">
+                  ✨ Rekomendasi AI
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Sebelum (Foto Asli) */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-gray-700">
-                    <span>Sebelum (Foto Asli)</span>
-                    {displayUviNumber && (
-                      <span className="text-[11px] text-gray-400 font-semibold">
-                        Skor Indeks: {displayUviNumber}
-                      </span>
-                    )}
-                  </div>
-                  <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-gray-200 h-64 sm:h-72 shadow-xs">
-                    <Image
-                      src={rawImageUrl}
-                      alt="Sebelum (Foto Asli)"
-                      rootClassName="w-full h-full"
-                      className="w-full h-full object-cover"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-semibold pointer-events-none">
-                      Foto Asli
-                    </div>
-                    {/* Top Right: Uvi Score */}
-                    {displayUviNumber !== null && displayUviNumber !== undefined
-                      ? (() => {
-                          const uviInfo = evaluateUviScore(displayUviNumber);
-                          const displayScore =
-                            Number(displayUviNumber) > 1
-                              ? (Number(displayUviNumber) / 10).toFixed(2)
-                              : Number(displayUviNumber).toFixed(2);
-                          return (
-                            <div
-                              className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
-                              style={{
-                                backgroundColor: "rgba(17, 24, 39, 0.85)",
-                                borderColor: hexToRgba(uviInfo.color, 0.4),
-                              }}
-                            >
-                              <span className="text-gray-300 font-semibold">
-                                UVI:
-                              </span>
-                              <span style={{ color: uviInfo.color }}>
-                                {displayScore}
-                              </span>
-                            </div>
-                          );
-                        })()
-                      : null}
-                  </div>
-                </div>
-
-                {/* Sesudah (Optimalisasi AI) */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-[#00bcd4]">
-                    <span>Sesudah (Optimalisasi AI)</span>
-                    <span className="text-[11px] bg-cyan-100 text-cyan-800 px-2.5 py-0.5 rounded-full font-bold">
-                      ✨ Rekomendasi AI
-                    </span>
-                  </div>
-                  <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-[#00bcd4]/50 h-64 sm:h-72 shadow-xs">
-                    <Image
-                      src={generatedImageUrl}
-                      alt="Sesudah (Optimalisasi AI)"
-                      rootClassName="w-full h-full"
-                      className="w-full h-full object-cover"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <div className="absolute top-2.5 left-2.5 bg-[#00bcd4]/90 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-semibold pointer-events-none">
-                      Hasil Redesign AI
-                    </div>
-                    {/* Top Right: Uvi Score */}
-                    {displayNewUviNumber !== null &&
-                    displayNewUviNumber !== undefined
-                      ? (() => {
-                          const uviInfo = evaluateUviScore(displayNewUviNumber);
-                          const displayScore =
-                            Number(displayNewUviNumber) > 1
-                              ? (Number(displayNewUviNumber) / 10).toFixed(2)
-                              : Number(displayNewUviNumber).toFixed(2);
-                          return (
-                            <div
-                              className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-md font-bold z-10 pointer-events-none border backdrop-blur-xs flex items-center gap-1.5"
-                              style={{
-                                backgroundColor: "rgba(17, 24, 39, 0.85)",
-                                borderColor: hexToRgba(uviInfo.color, 0.4),
-                              }}
-                            >
-                              <span className="text-gray-300 font-semibold">
-                                UVI:
-                              </span>
-                              <span style={{ color: uviInfo.color }}>
-                                {displayScore}
-                              </span>
-                            </div>
-                          );
-                        })()
-                      : null}
-                  </div>
-                </div>
-              </div>
+              <BeforeAfterSlider
+                beforeImage={rawImageUrl}
+                afterImage={generatedImageUrl}
+                beforeLabel="Sebelum"
+                afterLabel="Sesudah · Konsep AI"
+                beforeUvi={uviScore}
+                afterUvi={newUviScore}
+                metaText={
+                  [fileName, locationName || projectName]
+                    .filter(Boolean)
+                    .join(" · ") || null
+                }
+              />
             </div>
           )}
 
